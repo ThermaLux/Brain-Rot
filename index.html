@@ -4,1054 +4,1020 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Fishing Brainrot - Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Fredoka:wght@400;600;700&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --neon-pink: #ff10f0;
-            --neon-cyan: #00fff9;
-            --neon-yellow: #fff700;
-            --dark-bg: #0a0e27;
-            --card-bg: #151b3d;
-            --text-primary: #e0e6ff;
-            --text-secondary: #8891b5;
-            --border-glow: rgba(0, 255, 249, 0.3);
+        [data-theme="retro"] {
+            --neon-pink: #ff10f0; --neon-cyan: #00fff9; --neon-yellow: #fff700;
+            --dark-bg: #0a0e27; --card-bg: #151b3d;
+            --text-primary: #e0e6ff; --text-secondary: #8891b5;
+            --border-glow: rgba(0,255,249,0.3);
+            --input-bg: rgba(10,14,39,0.6); --input-focus-bg: rgba(10,14,39,0.9);
+            --chip-bg: rgba(10,14,39,0.6); --radio-bg: rgba(10,14,39,0.6);
+        }
+        [data-theme="playful"] {
+            --neon-pink: #ff69b4; --neon-cyan: #00d4ff; --neon-yellow: #ffd700;
+            --dark-bg: #1a1030; --card-bg: #231640;
+            --text-primary: #f0e6ff; --text-secondary: #a88cc2;
+            --border-glow: rgba(0,212,255,0.35);
+            --input-bg: rgba(26,16,48,0.7); --input-focus-bg: rgba(26,16,48,0.95);
+            --chip-bg: rgba(26,16,48,0.6); --radio-bg: rgba(26,16,48,0.6);
+        }
+        [data-theme="sleek"] {
+            --neon-pink: #a855f7; --neon-cyan: #00ff88; --neon-yellow: #facc15;
+            --dark-bg: #0f0f0f; --card-bg: #1a1a1a;
+            --text-primary: #ffffff; --text-secondary: #a0aec0;
+            --border-glow: rgba(0,255,136,0.3);
+            --input-bg: rgba(15,15,15,0.7); --input-focus-bg: rgba(15,15,15,0.95);
+            --chip-bg: rgba(15,15,15,0.6); --radio-bg: rgba(15,15,15,0.6);
+        }
+        [data-theme="minimal"] {
+            --neon-pink: #6366f1; --neon-cyan: #60a5fa; --neon-yellow: #a78bfa;
+            --dark-bg: #0f1729; --card-bg: #1a2340;
+            --text-primary: #e2e8f0; --text-secondary: #64748b;
+            --border-glow: rgba(96,165,250,0.25);
+            --input-bg: rgba(15,23,41,0.7); --input-focus-bg: rgba(15,23,41,0.95);
+            --chip-bg: rgba(15,23,41,0.6); --radio-bg: rgba(15,23,41,0.6);
+        }
+        [data-theme="cozy"] {
+            --neon-pink: #fb923c; --neon-cyan: #f59e0b; --neon-yellow: #fbbf24;
+            --dark-bg: #1a1410; --card-bg: #252018;
+            --text-primary: #f5e6d3; --text-secondary: #a08060;
+            --border-glow: rgba(245,158,11,0.3);
+            --input-bg: rgba(26,20,16,0.7); --input-focus-bg: rgba(26,20,16,0.95);
+            --chip-bg: rgba(26,20,16,0.6); --radio-bg: rgba(26,20,16,0.6);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
             font-family: 'Orbitron', sans-serif;
             background: var(--dark-bg);
             color: var(--text-primary);
             min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(255, 16, 240, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 255, 249, 0.1) 0%, transparent 50%);
+            transition: background 0.4s ease, color 0.4s ease;
         }
+        [data-theme="playful"] body  { font-family: 'Fredoka', cursive; }
+        [data-theme="sleek"]  body   { font-family: 'Poppins', sans-serif; }
+        [data-theme="minimal"] body  { font-family: 'Inter','Segoe UI', sans-serif; }
+        [data-theme="cozy"]   body   { font-family: 'Quicksand', sans-serif; }
+        [data-theme="retro"]  body   { font-family: 'Orbitron', sans-serif; }
 
         body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 255, 249, 0.03) 0px,
-                transparent 1px,
-                transparent 2px,
-                rgba(0, 255, 249, 0.03) 3px
-            );
-            pointer-events: none;
-            z-index: 1;
+            content:''; position:fixed; inset:0;
+            background: repeating-linear-gradient(0deg, rgba(0,255,249,0.03) 0px, transparent 1px, transparent 2px, rgba(0,255,249,0.03) 3px);
+            pointer-events:none; z-index:1; opacity:0.5; transition:opacity 0.4s;
         }
+        [data-theme="playful"] body::before,
+        [data-theme="cozy"]   body::before,
+        [data-theme="minimal"] body::before { opacity:0; }
 
-        .page {
-            position: relative;
-            z-index: 2;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+        .page { position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:20px; }
+
+        /* Theme Selector */
+        .theme-selector {
+            background:var(--card-bg); border:2px solid var(--border-glow); border-radius:15px;
+            padding:20px; margin-bottom:20px; box-shadow:0 0 20px var(--border-glow);
+            transition:background 0.4s, border-color 0.4s;
         }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
+        .theme-selector__title { font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; margin-bottom:15px; text-align:center; }
+        .theme-buttons { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+        .theme-btn {
+            padding:10px 20px; border:2px solid var(--border-glow); background:rgba(255,255,255,0.05);
+            color:var(--text-primary); font-family:inherit; font-weight:700; font-size:0.85rem;
+            cursor:pointer; border-radius:8px; transition:all 0.3s; text-transform:uppercase;
         }
+        .theme-btn:hover { background:rgba(255,255,255,0.1); box-shadow:0 0 15px var(--border-glow); transform:translateY(-2px); }
+        .theme-btn.active { background:linear-gradient(135deg,var(--neon-pink),var(--neon-cyan)); border-color:var(--neon-pink); color:#fff; box-shadow:0 0 20px var(--neon-pink); }
 
-        .header__left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 255, 249, 0.4);
-        }
-
+        /* Header */
+        .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; flex-wrap:wrap; gap:20px; }
+        .header__left { display:flex; align-items:center; gap:15px; }
+        .logo-img { width:50px; height:50px; border-radius:10px; border:2px solid var(--neon-cyan); box-shadow:0 0 15px var(--neon-cyan); }
         .brand__title {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
+            font-family:'Press Start 2P',cursive; font-size:1.2rem;
+            background:linear-gradient(135deg,var(--neon-pink),var(--neon-cyan));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:5px;
         }
+        [data-theme="playful"] .brand__title { font-family:'Fredoka',cursive; font-size:1.4rem; }
+        .brand__sub { font-size:0.75rem; color:var(--text-secondary); }
+        .header__right { display:flex; gap:10px; }
 
-        .brand__sub {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .header__right {
-            display: flex;
-            gap: 10px;
-        }
-
+        /* Buttons */
         .btn {
-            padding: 12px 24px;
-            border: 2px solid var(--neon-cyan);
-            background: rgba(0, 255, 249, 0.1);
-            color: var(--text-primary);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s;
-            text-transform: uppercase;
+            padding:12px 24px; border:2px solid var(--neon-cyan); background:rgba(255,255,255,0.05);
+            color:var(--text-primary); font-family:inherit; font-weight:700; font-size:0.9rem;
+            cursor:pointer; border-radius:8px; transition:all 0.3s; text-transform:uppercase;
         }
+        [data-theme="playful"] .btn { border-radius:20px; }
+        [data-theme="minimal"] .btn { border-radius:6px; text-transform:none; }
+        .btn:hover { background:rgba(255,255,255,0.1); box-shadow:0 0 15px var(--border-glow); transform:translateY(-2px); }
+        .btn--primary { background:linear-gradient(135deg,rgba(255,16,240,0.25),rgba(0,255,249,0.25)); border-color:var(--neon-pink); }
+        .btn--primary:hover { box-shadow:0 0 20px var(--neon-pink); }
+        .btn--gold { background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(251,146,60,0.25)); border-color:#f59e0b; color:#fbbf24; }
+        .btn--gold:hover { box-shadow:0 0 20px rgba(245,158,11,0.4); }
 
-        .btn:hover {
-            background: rgba(0, 255, 249, 0.2);
-            box-shadow: 0 0 15px rgba(0, 255, 249, 0.4);
-            transform: translateY(-2px);
-        }
+        /* Layout */
+        .layout { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
 
-        .btn--primary {
-            background: linear-gradient(135deg, rgba(255, 16, 240, 0.3), rgba(0, 255, 249, 0.3));
-            border-color: var(--neon-pink);
-        }
-
-        .btn--primary:hover {
-            box-shadow: 0 0 20px rgba(255, 16, 240, 0.5);
-        }
-
-        .layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-        }
-
+        /* Cards */
         .card {
-            background: var(--card-bg);
-            border: 2px solid var(--border-glow);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 0 20px rgba(0, 255, 249, 0.1);
-            position: relative;
-            overflow: hidden;
+            background:var(--card-bg); border:2px solid var(--border-glow); border-radius:15px;
+            padding:25px; box-shadow:0 0 20px var(--border-glow); position:relative; overflow:hidden;
+            transition:background 0.4s, border-color 0.4s;
         }
-
+        [data-theme="playful"] .card { border-radius:25px; border-width:3px; }
+        [data-theme="minimal"] .card { border-radius:10px; border-width:1px; }
         .card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan), var(--neon-yellow), var(--neon-pink));
-            border-radius: 15px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s;
-            background-size: 300% 300%;
-            animation: gradientShift 4s ease infinite;
+            content:''; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px;
+            background:linear-gradient(45deg,var(--neon-pink),var(--neon-cyan),var(--neon-yellow),var(--neon-pink));
+            border-radius:15px; z-index:-1; opacity:0; transition:opacity 0.3s;
+            background-size:300% 300%; animation:gradientShift 4s ease infinite;
         }
+        @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        .card:hover::before { opacity:0.3; }
+        .card--inputs    { grid-column:1/2; }
+        .card--mutations { grid-column:2/3; }
+        .card--result    { grid-column:3/4; }
+        .card__head { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+        .card__title { font-size:1.3rem; font-weight:900; color:var(--neon-cyan); text-transform:uppercase; }
+        [data-theme="minimal"] .card__title { text-transform:none; font-size:1.2rem; }
+        .badge { padding:6px 12px; background:rgba(255,255,255,0.08); border:1px solid var(--neon-cyan); border-radius:20px; font-size:0.75rem; font-weight:700; color:var(--neon-cyan); }
 
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .card:hover::before {
-            opacity: 0.3;
-        }
-
-        .card--inputs {
-            grid-column: 1 / 2;
-        }
-
-        .card--mutations {
-            grid-column: 2 / 3;
-        }
-
-        .card--result {
-            grid-column: 3 / 4;
-        }
-
-        .card__head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card__title {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: var(--neon-cyan);
-            text-transform: uppercase;
-        }
-
-        .badge {
-            padding: 6px 12px;
-            background: rgba(0, 255, 249, 0.2);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .field {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            color: var(--neon-cyan);
-        }
-
-        .combo {
-            position: relative;
-        }
-
+        /* Fields & Inputs */
+        .field { margin-bottom:20px; }
+        .label { display:block; font-weight:700; margin-bottom:8px; font-size:0.9rem; text-transform:uppercase; color:var(--neon-cyan); }
+        [data-theme="minimal"] .label { text-transform:none; }
+        .combo { position:relative; }
         .input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(10, 14, 39, 0.6);
-            border: 2px solid rgba(0, 255, 249, 0.3);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s;
+            width:100%; padding:12px; background:var(--input-bg); border:2px solid var(--border-glow);
+            border-radius:8px; color:var(--text-primary); font-family:inherit; font-size:1rem; transition:all 0.3s;
         }
+        .input:focus { outline:none; border-color:var(--neon-cyan); box-shadow:0 0 15px var(--border-glow); background:var(--input-focus-bg); }
 
-        .input:focus {
-            outline: none;
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 255, 249, 0.4);
-            background: rgba(10, 14, 39, 0.9);
-        }
-
+        /* Listbox */
         .listbox {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            max-height: 300px;
-            overflow-y: auto;
-            background: var(--card-bg);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 8px;
-            margin-top: 5px;
-            z-index: 100;
-            box-shadow: 0 5px 20px rgba(0, 255, 249, 0.3);
+            display:none; position:absolute; top:100%; left:0; right:0; max-height:300px; overflow-y:auto;
+            background:var(--card-bg); border:2px solid var(--neon-cyan); border-radius:8px;
+            margin-top:5px; z-index:100; box-shadow:0 5px 20px var(--border-glow);
         }
-
-        .listbox.show {
-            display: block;
-        }
-
+        .listbox.show { display:block; }
         .listbox__item {
-            padding: 12px;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(0, 255, 249, 0.1);
-            transition: all 0.2s;
+            padding:10px 12px; cursor:pointer; border-bottom:1px solid var(--border-glow);
+            transition:background 0.2s; color:var(--text-primary);
+            display:flex; align-items:center; gap:10px;
+        }
+        .listbox__item:hover { background:rgba(255,255,255,0.07); }
+        .listbox__item:last-child { border-bottom:none; }
+
+        /* Listbox item internals */
+        .listbox__item-name { flex:1; font-weight:700; font-size:0.88rem; }
+        .listbox__item-meta {
+            display:flex; align-items:center; gap:8px; flex-shrink:0;
+        }
+        .listbox__item-rarity {
+            font-size:0.68rem; font-weight:700; text-transform:uppercase;
+            letter-spacing:0.5px; padding:3px 7px; border-radius:10px;
+            white-space:nowrap;
+        }
+        .listbox__item-chance {
+            font-size:0.68rem; color:var(--text-secondary); white-space:nowrap; font-weight:600;
         }
 
-        .listbox__item:hover {
-            background: rgba(0, 255, 249, 0.1);
-        }
+        /* Rarity badge colours */
+        .rb-Common      { background:rgba(136,145,181,0.25); color:#8891b5; }
+        .rb-Uncommon    { background:rgba(34,197,94,0.2);    color:#22c55e; }
+        .rb-Rare        { background:rgba(59,130,246,0.2);   color:#60a5fa; }
+        .rb-Epic        { background:rgba(168,85,247,0.2);   color:#c084fc; }
+        .rb-Legendary   { background:rgba(245,158,11,0.2);   color:#fbbf24; }
+        .rb-Mythic      { background:rgba(239,68,68,0.2);    color:#f87171; }
+        .rb-Secret      { background:rgba(236,72,153,0.2);   color:#f472b6; }
+        .rb-Exotic      { background:rgba(6,182,212,0.2);    color:#22d3ee; }
+        .rb-OG          { background:rgba(251,191,36,0.2);   color:#fde047; }
+        .rb-Event       { background:rgba(132,204,22,0.2);   color:#a3e635; }
+        .rb-Divine      { background:rgba(249,115,22,0.2);   color:#fb923c; }
+        .rb-GOD         { background:linear-gradient(135deg,rgba(251,191,36,0.3),rgba(249,115,22,0.3)); color:#fbbf24; }
+        .rb-Limited     { background:rgba(167,139,250,0.2);  color:#a78bfa; }
+        .rb-Exclusive   { background:rgba(96,165,250,0.2);   color:#60a5fa; }
+        .rb-Admin       { background:rgba(255,68,68,0.25);   color:#ff4444; }
+        .rb-XMAS25      { background:rgba(132,204,22,0.2);   color:#a3e635; }
 
-        .iconbtn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 5px 10px;
-            transition: color 0.3s;
-        }
+        .iconbtn { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-secondary); font-size:1.5rem; cursor:pointer; padding:5px 10px; transition:color 0.3s; }
+        .iconbtn:hover { color:var(--neon-pink); }
 
-        .iconbtn:hover {
-            color: var(--neon-pink);
-        }
+        /* Stat Mini */
+        .statsRow { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px; }
+        .statMini { background:rgba(255,255,255,0.04); padding:15px; border-radius:8px; border:1px solid var(--border-glow); }
+        .statMini__label { font-size:0.75rem; color:var(--text-secondary); margin-bottom:5px; text-transform:uppercase; }
+        .statMini__value { font-size:1.3rem; font-weight:900; color:var(--neon-yellow); }
+        .statMini__sub { font-size:0.7rem; color:var(--text-secondary); margin-top:3px; }
 
-        .statsRow {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+        .divider { height:2px; background:linear-gradient(90deg,transparent,var(--neon-cyan),transparent); margin:20px 0; }
 
-        .statMini {
-            background: rgba(0, 255, 249, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 255, 249, 0.2);
-        }
+        .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+        .label-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+        .help { font-size:0.7rem; color:var(--text-secondary); font-style:italic; }
 
-        .statMini__label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
+        /* Radio Toggle */
+        .radio-input { display:flex; gap:5px; background:var(--radio-bg); padding:5px; border-radius:8px; border:2px solid var(--border-glow); }
+        .radio-input label { flex:1; position:relative; z-index:2; }
+        .radio-input input { display:none; }
+        .radio-input span { display:block; padding:8px; text-align:center; cursor:pointer; transition:all 0.3s; border-radius:5px; font-weight:700; color:var(--text-primary); }
+        .radio-input input:checked + span { background:linear-gradient(135deg,var(--neon-pink),var(--neon-cyan)); color:#fff; }
 
-        .statMini__value {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: var(--neon-yellow);
-        }
+        /* Stepper */
+        .stepper { display:flex; gap:10px; align-items:center; }
+        .stepper__btn { width:40px; height:40px; background:rgba(255,255,255,0.05); border:2px solid var(--neon-cyan); border-radius:8px; color:var(--text-primary); font-size:1.2rem; cursor:pointer; transition:all 0.3s; font-weight:900; }
+        .stepper__btn:hover { background:rgba(255,255,255,0.12); box-shadow:0 0 10px var(--border-glow); }
+        .stepper__input { flex:1; text-align:center; }
 
-        .statMini__sub {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-top: 3px;
-        }
+        /* Chips */
+        .chips { display:flex; flex-wrap:wrap; gap:10px; }
+        .chip { padding:10px 15px; background:var(--chip-bg); border:2px solid rgba(255,255,255,0.15); border-radius:20px; cursor:pointer; transition:all 0.3s; font-size:0.85rem; font-weight:700; color:var(--text-primary); }
+        .chip:hover { border-color:var(--neon-pink); transform:translateY(-2px); }
+        .chip.active { background:linear-gradient(135deg,var(--neon-pink),var(--neon-cyan)); border-color:var(--neon-cyan); box-shadow:0 0 15px var(--border-glow); color:#fff; }
 
-        .divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            margin: 20px 0;
-        }
-
-        .grid2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .label-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .help {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-
-        .radio-input {
-            display: flex;
-            gap: 5px;
-            position: relative;
-            background: rgba(10, 14, 39, 0.6);
-            padding: 5px;
-            border-radius: 8px;
-            border: 2px solid rgba(0, 255, 249, 0.3);
-        }
-
-        .radio-input label {
-            flex: 1;
-            position: relative;
-            z-index: 2;
-        }
-
-        .radio-input input {
-            display: none;
-        }
-
-        .radio-input span {
-            display: block;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-radius: 5px;
-            font-weight: 700;
-        }
-
-        .radio-input input:checked + span {
-            background: linear-gradient(135deg, rgba(255, 16, 240, 0.3), rgba(0, 255, 249, 0.3));
-            color: var(--neon-cyan);
-        }
-
-        .stepper {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .stepper__btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 255, 249, 0.1);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 900;
-        }
-
-        .stepper__btn:hover {
-            background: rgba(0, 255, 249, 0.2);
-            box-shadow: 0 0 10px rgba(0, 255, 249, 0.4);
-        }
-
-        .stepper__input {
-            flex: 1;
-            text-align: center;
-        }
-
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .chip {
-            padding: 10px 15px;
-            background: rgba(10, 14, 39, 0.6);
-            border: 2px solid rgba(136, 145, 181, 0.3);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .chip:hover {
-            border-color: var(--neon-pink);
-            transform: translateY(-2px);
-        }
-
-        .chip.active {
-            background: linear-gradient(135deg, rgba(255, 16, 240, 0.2), rgba(0, 255, 249, 0.2));
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 255, 249, 0.3);
-        }
-
-        .resultHero {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .resultHero__label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
+        /* Result Hero */
+        .resultHero { text-align:center; padding:20px 0; }
+        .resultHero__label { font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
         .resultHero__value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-pink), var(--neon-yellow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: pulse 2s ease-in-out infinite;
+            font-size:2.5rem; font-weight:900;
+            background:linear-gradient(135deg,var(--neon-pink),var(--neon-yellow));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:pulse 2s ease-in-out infinite;
         }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+        .resultHero__sub { font-size:0.9rem; color:var(--text-secondary); margin-top:5px; }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        /* Breakdown */
+        .breakdown { margin-top:20px; }
+        .row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-glow); }
+        .row__k { color:var(--text-secondary); font-size:0.85rem; }
+        .row__v { color:var(--neon-cyan); font-weight:700; font-size:0.9rem; }
+        .row--big { padding-top:15px; }
+        .row--big .row__k { color:var(--text-primary); font-weight:700; font-size:1.1rem; }
+        .row--big .row__v { color:var(--neon-yellow); font-size:1.1rem; }
+
+        .msg--error { color:#ff4444; font-size:0.8rem; margin-top:5px; }
+        .card__hint { font-size:0.75rem; color:var(--text-secondary); margin-top:5px; }
+
+        /* ============================================================
+           ADD TO COLLECTION BUTTON (inside calculator)
+           ============================================================ */
+        .add-to-col-wrap {
+            margin-top:16px;
+            overflow:hidden;
+            max-height:0;
+            opacity:0;
+            transition:max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
         }
-
-        .resultHero__sub {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 5px;
+        .add-to-col-wrap.visible {
+            max-height:60px;
+            opacity:1;
         }
-
-        .breakdown {
-            margin-top: 20px;
+        .btn--add-col {
+            width:100%;
+            padding:11px 18px;
+            border:2px solid var(--neon-yellow);
+            background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(251,191,36,0.15));
+            color:var(--neon-yellow);
+            font-family:inherit; font-weight:700; font-size:0.82rem;
+            cursor:pointer; border-radius:8px; transition:all 0.3s; text-transform:uppercase;
+            display:flex; align-items:center; justify-content:center; gap:8px;
         }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0, 255, 249, 0.1);
+        [data-theme="playful"] .btn--add-col { border-radius:20px; }
+        .btn--add-col:hover {
+            background:linear-gradient(135deg,rgba(167,139,250,0.3),rgba(251,191,36,0.3));
+            box-shadow:0 0 18px rgba(251,191,36,0.35);
+            transform:translateY(-2px);
         }
+        .btn--add-col.already-in { opacity:0.4; cursor:not-allowed; border-color:var(--text-secondary); color:var(--text-secondary); background:rgba(255,255,255,0.03); }
+        .btn--add-col.already-in:hover { transform:none; box-shadow:none; }
 
-        .row__k {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+        /* ============================================================
+           COLLECTION PANEL
+           ============================================================ */
+        .card--collection { grid-column:1/-1; }
+
+        /* Collection item rows */
+        .collection-list { display:flex; flex-direction:column; gap:8px; max-height:340px; overflow-y:auto; padding-right:4px; }
+        .collection-item {
+            display:flex; align-items:center; gap:12px; padding:10px 14px;
+            background:rgba(255,255,255,0.04); border:1px solid var(--border-glow);
+            border-radius:10px; transition:background 0.2s;
         }
-
-        .row__v {
-            color: var(--neon-cyan);
-            font-weight: 700;
-            font-size: 0.9rem;
+        .collection-item:hover { background:rgba(255,255,255,0.07); }
+        .collection-item__name { flex:1; font-weight:700; font-size:0.9rem; color:var(--text-primary); }
+        .collection-item__rarity { font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+        .collection-item__value { font-weight:700; color:var(--neon-yellow); font-size:0.9rem; white-space:nowrap; }
+        .collection-item__remove {
+            background:none; border:none; color:var(--text-secondary); font-size:1.3rem;
+            cursor:pointer; line-height:1; padding:2px 6px; border-radius:4px; transition:color 0.2s, background 0.2s;
         }
+        .collection-item__remove:hover { color:#ff4444; background:rgba(255,68,68,0.12); }
 
-        .row--big {
-            font-size: 1.1rem;
-            padding-top: 15px;
+        .collection-empty { color:var(--text-secondary); font-size:0.85rem; text-align:center; padding:30px 0; font-style:italic; }
+
+        /* Collection stats bar */
+        .collection-stats {
+            display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:18px; padding-top:18px;
+            border-top:2px solid var(--border-glow);
         }
-
-        .row--big .row__k {
-            color: var(--text-primary);
-            font-weight: 700;
+        .collection-stat {
+            background:rgba(255,255,255,0.04); border:1px solid var(--border-glow);
+            border-radius:10px; padding:14px; text-align:center;
         }
+        .collection-stat__label { font-size:0.7rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+        .collection-stat__value { font-size:1.1rem; font-weight:900; color:var(--neon-yellow); }
+        .collection-stat__value--pink { color:var(--neon-pink); }
+        .collection-stat__sub { font-size:0.65rem; color:var(--text-secondary); margin-top:3px; }
 
-        .row--big .row__v {
-            color: var(--neon-yellow);
-            font-size: 1.1rem;
+        /* Rarity colour dots */
+        .rarity-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; flex-shrink:0; }
+        .rarity-Common   { background:#8891b5; }
+        .rarity-Uncommon { background:#22c55e; }
+        .rarity-Rare     { background:#3b82f6; }
+        .rarity-Epic     { background:#a855f7; }
+        .rarity-Legendary{ background:#f59e0b; }
+        .rarity-Mythic   { background:#ef4444; }
+        .rarity-Secret   { background:#ec4899; }
+        .rarity-Exotic   { background:#06b6d4; }
+        .rarity-OG       { background:#fbbf24; }
+        .rarity-Event    { background:#84cc16; }
+        .rarity-Divine   { background:#f97316; }
+        .rarity-GOD      { background:linear-gradient(135deg,#fbbf24,#f97316); }
+        .rarity-Limited  { background:#a78bfa; }
+        .rarity-Exclusive{ background:#60a5fa; }
+        .rarity-Admin    { background:#ff4444; }
+
+        /* Scrollbar */
+        .collection-list::-webkit-scrollbar { width:6px; }
+        .collection-list::-webkit-scrollbar-track { background:transparent; }
+        .collection-list::-webkit-scrollbar-thumb { background:var(--border-glow); border-radius:3px; }
+
+        /* Responsive */
+        @media (max-width:1200px) {
+            .layout { grid-template-columns:1fr 1fr; }
+            .card--result { grid-column:1/3; }
+            .card--collection { grid-column:1/-1; }
         }
-
-        .msg--error {
-            color: #ff4444;
-            font-size: 0.8rem;
-            margin-top: 5px;
-        }
-
-        .card__hint {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-
-        @media (max-width: 1200px) {
-            .layout {
-                grid-template-columns: 1fr 1fr;
-            }
-            .card--result {
-                grid-column: 1 / 3;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .layout {
-                grid-template-columns: 1fr;
-            }
-            .card--inputs,
-            .card--mutations,
-            .card--result {
-                grid-column: 1;
-            }
-            .header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .brand__title {
-                font-size: 0.9rem;
-            }
+        @media (max-width:768px) {
+            .layout { grid-template-columns:1fr; }
+            .card--inputs,.card--mutations,.card--result,.card--collection { grid-column:1; }
+            .header { flex-direction:column; text-align:center; }
+            .brand__title { font-size:0.9rem; }
+            .collection-stats { grid-template-columns:1fr; }
         }
     </style>
 </head>
-<body>
-    <div class="page">
-        <header class="header">
-            <div class="header__left">
-                <img class="logo-img" src="https://cdn.discordapp.com/icons/1452832782442168355/5b7cbafcd72d351c20a3875b0ae31a9b.png?size=4096" alt="Logo" draggable="false" />
-                <div class="brand">
-                    <h1 class="brand__title">Brainrot Calculator</h1>
-                    <p class="brand__sub">Designed by Therma Lux Inspired by Fluff and Pasya</p>
-                </div>
-            </div>
+<script>
+    (function(){ var t=localStorage.getItem('brainrot-theme'); if(t) document.documentElement.setAttribute('data-theme',t); })();
+</script>
+<body data-theme="minimal">
+<div class="page">
 
-            <div class="header__right">
-                <button id="btnReset" class="btn btn--secondary" type="button">Reset</button>
-                <button id="btnCalc" class="btn btn--primary" type="button">Calculate</button>
-                <button id="btnCopy" class="btn btn--ghost" type="button">Copy</button>
-            </div>
-        </header>
-
-        <main class="layout">
-            <section class="card card--inputs">
-                <div class="card__head">
-                    <h2 class="card__title">Inputs</h2>
-                    <div class="badge" id="statusBadge">Ready</div>
-                </div>
-
-                <div class="field">
-                    <label for="brainrot" class="label">Brainrot</label>
-                    <div class="combo">
-                        <input
-                            id="brainrot"
-                            class="input combo__input"
-                            type="text"
-                            placeholder="Search brainrot…"
-                            autocomplete="off"
-                        />
-                        <button id="btnClearBrainrot" class="iconbtn" type="button">×</button>
-                        <div id="suggestions" class="listbox"></div>
-                    </div>
-                    <div id="error" class="msg msg--error"></div>
-                </div>
-
-                <div class="statsRow">
-                    <div class="statMini">
-                        <div class="statMini__label">Base Stat</div>
-                        <div class="statMini__value" id="baseStat">—</div>
-                        <div class="statMini__sub">$ / Fish</div>
-                    </div>
-                    <div class="statMini">
-                        <div class="statMini__label">Mutation Total</div>
-                        <div class="statMini__value" id="mutationTotal">0%</div>
-                        <div class="statMini__sub">stacked</div>
-                    </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="grid2">
-                    <div class="field">
-                        <div class="label-row">
-                            <label class="label">Rank</label>
-                            <span class="help">+15% per rank</span>
-                        </div>
-                        <div class="radio-input" id="rankRadio">
-                            <label>
-                                <input value="0" name="rank-radio" type="radio" checked>
-                                <span>0</span>
-                            </label>
-                            <label>
-                                <input value="1" name="rank-radio" type="radio">
-                                <span>1</span>
-                            </label>
-                            <label>
-                                <input value="2" name="rank-radio" type="radio">
-                                <span>2</span>
-                            </label>
-                            <label>
-                                <input value="3" name="rank-radio" type="radio">
-                                <span>3</span>
-                            </label>
-                            <label>
-                                <input value="4" name="rank-radio" type="radio">
-                                <span>4</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label" for="level">Level</label>
-                        <div class="stepper">
-                            <button id="levelDown" class="stepper__btn" type="button">−</button>
-                            <input id="level" class="input stepper__input" type="number" min="1" value="1" />
-                            <button id="levelUp" class="stepper__btn" type="button">+</button>
-                        </div>
-                        <div class="field__meta"><span class="help">+50% per level after 1</span></div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="card card--mutations">
-                <div class="card__head">
-                    <h2 class="card__title">Mutations</h2>
-                </div>
-                <p class="card__hint">Tap to toggle. Percentages stack (sum → multiplier).</p>
-                <div class="divider"></div>
-                <div id="mutationsList" class="chips"></div>
-            </section>
-
-            <aside class="card card--result">
-                <div class="resultHero">
-                    <div class="resultHero__label">Final Stat</div>
-                    <div class="resultHero__value" id="finalStat">—</div>
-                    <div class="resultHero__sub">$/Fish</div>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="breakdown">
-                    <div class="row">
-                        <div class="row__k">Rank multiplier</div>
-                        <div class="row__v" id="rankMul">—</div>
-                    </div>
-                    <div class="row">
-                        <div class="row__k">Level multiplier</div>
-                        <div class="row__v" id="levelMul">—</div>
-                    </div>
-                    <div class="row">
-                        <div class="row__k">Mutation multiplier</div>
-                        <div class="row__v" id="mutationMul">—</div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="row row--big">
-                        <div class="row__k">Final Calculation</div>
-                        <div class="row__v" id="formula">—</div>
-                    </div>
-                </div>
-            </aside>
-        </main>
+    <!-- Theme Selector -->
+    <div class="theme-selector">
+        <div class="theme-selector__title">🎨 Choose Your Theme</div>
+        <div class="theme-buttons">
+            <button class="theme-btn" data-theme="playful">🌈 Playful</button>
+            <button class="theme-btn" data-theme="sleek">⚡ Sleek</button>
+            <button class="theme-btn active" data-theme="minimal">🌙 Midnight</button>
+            <button class="theme-btn" data-theme="cozy">🔥 Ember</button>
+            <button class="theme-btn" data-theme="retro">🎮 Retro</button>
+        </div>
     </div>
 
-    <script>
-        // All brainrot data from the game
-        const brainrotData = {
-            "Tung Tung Sahur": { FishValue: 100, Rarity: "Common" },
-            "Capuchino Assasino": { FishValue: 150, Rarity: "Common" },
-            "Pipi Potato": { FishValue: 300, Rarity: "Uncommon" },
-            "Capuchina Ballerina": { FishValue: 450, Rarity: "Uncommon" },
-            "Salamino Penguino": { FishValue: 750, Rarity: "Rare" },
-            "Fluriflura": { FishValue: 937, Rarity: "Rare" },
-            "Tim Cheese": { FishValue: 1125, Rarity: "Rare" },
-            "Orangutini Ananasini": { FishValue: 1875, Rarity: "Epic" },
-            "Brr Brr Patapim": { FishValue: 3000, Rarity: "Epic" },
-            "Udin Din Din Din Dun": { FishValue: 4500, Rarity: "Epic" },
-            "Pipi Kiwi": { FishValue: 5250, Rarity: "Epic" },
-            "Nooo My Hotspot": { FishValue: 3500, Rarity: "Epic" },
-            "Chef Crabracadabra": { FishValue: 9000, Rarity: "Legendary" },
-            "Boneca Ambalabu": { FishValue: 12000, Rarity: "Legendary" },
-            "Cacto Hipopotamo": { FishValue: 13500, Rarity: "Legendary" },
-            "Sigma Boy": { FishValue: 18000, Rarity: "Legendary" },
-            "Capi Taco": { FishValue: 15000, Rarity: "Legendary" },
-            "Tukanno Bananno": { FishValue: 32000, Rarity: "Legendary" },
-            "Gorillo Watermelondrillo": { FishValue: 37500, Rarity: "Mythic" },
-            "Tric Trac Barabum": { FishValue: 52500, Rarity: "Mythic" },
-            "Avocadini Guffo": { FishValue: 63750, Rarity: "Mythic" },
-            "Quivioli Ameleonni": { FishValue: 100000, Rarity: "Mythic" },
-            "Tacorita Tacorito": { FishValue: 100000, Rarity: "Mythic" },
-            "Friggo Camelo": { FishValue: 150000, Rarity: "Mythic" },
-            "Glorbo Fruttodrillo": { FishValue: 187500, Rarity: "Mythic" },
-            "Pakrahmatmamat": { FishValue: 225000, Rarity: "Mythic" },
-            "Karkerkar Kurkur": { FishValue: 350000, Rarity: "Mythic" },
-            "Candy Caney": { FishValue: 100000, Rarity: "XMAS 25" },
-            "Santa Hotspot": { FishValue: 100000, Rarity: "XMAS 25" },
-            "Elf Elf Sahur": { FishValue: 40000, Rarity: "XMAS 25" },
-            "Ginger Sekolah": { FishValue: 1000000, Rarity: "XMAS 25" },
-            "Ginger 67": { FishValue: 10000, Rarity: "XMAS 25" },
-            "La Vacca Saturnita": { FishValue: 1000000, Rarity: "Secret" },
-            "Tic Tac Sahur": { FishValue: 1750000, Rarity: "Secret" },
-            "Pot Hotspot": { FishValue: 2250000, Rarity: "Secret" },
-            "Cocofanto Elefanto": { FishValue: 2375000, Rarity: "Secret" },
-            "Job Job Sahur": { FishValue: 2500000, Rarity: "Secret" },
-            "La Cucaracha": { FishValue: 2750000, Rarity: "Secret" },
-            "La Grande Combination": { FishValue: 3000000, Rarity: "Secret" },
-            "Cuadramat & Pak": { FishValue: 3750000, Rarity: "Secret" },
-            "Dul Dul Dul": { FishValue: 4500000, Rarity: "Secret" },
-            "Cavallo Virtuoso": { FishValue: 5000000, Rarity: "Secret" },
-            "Nuclearo Dinossauro": { FishValue: 5000000, Rarity: "Exotic" },
-            "67": { FishValue: 5500000, Rarity: "Exotic" },
-            "Cupcake Koala": { FishValue: 6000000, Rarity: "Exotic" },
-            "Esok Sekolah": { FishValue: 6500000, Rarity: "Exotic" },
-            "Girafa Celestre": { FishValue: 8000000, Rarity: "Exotic" },
-            "Chillin Chilli": { FishValue: 10000000, Rarity: "Exotic" },
-            "Swag Soda": { FishValue: 12500000, Rarity: "Exotic" },
-            "Matteo": { FishValue: 15000000, Rarity: "Exotic" },
-            "Strawberelli Flamingelli": { FishValue: 15500000, Rarity: "Exotic" },
-            "Ketupat Kepat": { FishValue: 16000000, Rarity: "Exotic" },
-            "Torrtuginni Dragonfrutini": { FishValue: 18000000, Rarity: "Exotic" },
-            "Skull Skull Skull": { FishValue: 18000000, Rarity: "Exotic" },
-            "Cocosini Mama": { FishValue: 20000000, Rarity: "Exotic" },
-            "Mangolini Parrocini": { FishValue: 20000000, Rarity: "Exotic" },
-            "Pipi Corni": { FishValue: 25000000, Rarity: "Exotic" },
-            "Ganganzelli Trulala": { FishValue: 22500000, Rarity: "OG" },
-            "Strawberry Elephant": { FishValue: 50000000, Rarity: "OG" },
-            "Crystalini Ananassini": { FishValue: 55000000, Rarity: "OG" },
-            "Meowl": { FishValue: 65000000, Rarity: "OG" },
-            "Spiuniru Golubiru": { FishValue: 70000000, Rarity: "OG" },
-            "Tigroligre Frutonni": { FishValue: 80000000, Rarity: "OG" },
-            "Tralalelodon": { FishValue: 55000000, Rarity: "Event" },
-            "Orcadon": { FishValue: 58500000, Rarity: "Event" },
-            "Blingo Tentacolo": { FishValue: 62500000, Rarity: "Event" },
-            "Eviledon": { FishValue: 65000000, Rarity: "Event" },
-            "Moby Bobby": { FishValue: 75000000, Rarity: "Event" },
-            "Dragon Cannelloni": { FishValue: 75000000, Rarity: "Divine" },
-            "Alessio": { FishValue: 80000000, Rarity: "Divine" },
-            "Bombini Gusini": { FishValue: 85000000, Rarity: "Divine" },
-            "Mariachi Skeletoni": { FishValue: 87500000, Rarity: "Divine" },
-            "Chicleteira Bicicleteira": { FishValue: 90000000, Rarity: "Divine" },
-            "Piccione Maccina": { FishValue: 92500000, Rarity: "Divine" },
-            "Crabbo Limonetta": { FishValue: 95000000, Rarity: "Divine" },
-            "Bandito Axolito": { FishValue: 110000000, Rarity: "Divine" },
-            "Stoppo Luminino": { FishValue: 120000000, Rarity: "Divine" },
-            "Money Money Man": { FishValue: 125000000, Rarity: "GOD" },
-            "Signore Carapace": { FishValue: 175000000, Rarity: "GOD" },
-            "Karloo": { FishValue: 225000000, Rarity: "GOD" },
-            "Mastodontico Telepiedone": { FishValue: 325000000, Rarity: "GOD" },
-            "Pirulitoita Bicicleteira": { FishValue: 420000000, Rarity: "GOD" },
-            "Presento Camelo": { FishValue: 15000, Rarity: "Limited" },
-            "Festive 67": { FishValue: 25000, Rarity: "Limited" },
-            "La Vacca Presento": { FishValue: 50000, Rarity: "Limited" },
-            "Cooki": { FishValue: 225000, Rarity: "Limited" },
-            "25": { FishValue: 350000, Rarity: "Limited" },
-            "Santteo": { FishValue: 350000, Rarity: "Limited" },
-            "2026": { FishValue: 450000, Rarity: "Limited" },
-            "Buff Tung Tung Sahur": { FishValue: 5250, Rarity: "Exclusive" },
-            "Buff Tim Cheese": { FishValue: 7500, Rarity: "Exclusive" },
-            "Buff Fluriflura": { FishValue: 9500, Rarity: "Exclusive" },
-            "Buff Orangutini Ananasini": { FishValue: 1500, Rarity: "Exclusive" },
-            "Buff Gorillo Watermelondrillo": { FishValue: 30000, Rarity: "Exclusive" },
-            "Joe Pork": { FishValue: 25000, Rarity: "Admin" },
-            "Smurf Cat": { FishValue: 75000, Rarity: "Admin" },
-            "Skibo Boi": { FishValue: 250000, Rarity: "Admin" },
-            "Tuesday Hand": { FishValue: 350000, Rarity: "Admin" }
-        };
+    <header class="header">
+        <div class="header__left">
+            <img class="logo-img" src="https://cdn.discordapp.com/icons/1452832782442168355/5b7cbafcd72d351c20a3875b0ae31a9b.png?size=4096" alt="Logo" draggable="false"/>
+            <div class="brand">
+                <h1 class="brand__title">Brainrot Calculator</h1>
+                <p class="brand__sub">Designed by Therma Lux · Inspired by Fluff and Pasya</p>
+            </div>
+        </div>
+        <div class="header__right">
+            <button id="btnReset" class="btn btn--secondary">Reset</button>
+            <button id="btnCalc"  class="btn btn--primary">Calculate</button>
+            <button id="btnCopy"  class="btn btn--ghost">Copy</button>
+        </div>
+    </header>
 
-        // Mutations data - separated by type
-        const baseMutations = [
-            { name: "Gold", multiplier: 1.5, display: "+50%", isBase: true },
-            { name: "Diamond", multiplier: 2.0, display: "+100%", isBase: true }
-        ];
+    <main class="layout">
+        <!-- INPUTS -->
+        <section class="card card--inputs">
+            <div class="card__head">
+                <h2 class="card__title">Inputs</h2>
+                <div class="badge" id="statusBadge">Ready</div>
+            </div>
+            <div class="field">
+                <label class="label">Brainrot</label>
+                <div class="combo">
+                    <input id="brainrot" class="input" type="text" placeholder="Search brainrot…" autocomplete="off"/>
+                    <button id="btnClearBrainrot" class="iconbtn">×</button>
+                    <div id="suggestions" class="listbox"></div>
+                </div>
+                <div id="error" class="msg msg--error"></div>
+            </div>
 
-        const stackableMutations = [
-            { name: "Snowy", multiplier: 0.5, display: "+50%" },
-            { name: "Sakura", multiplier: 0.6, display: "+60%" },
-            { name: "Tornado", multiplier: 0.7, display: "+70%" },
-            { name: "Stinky", multiplier: 0.8, display: "+80%" },
-            { name: "Lightning", multiplier: 0.9, display: "+90%" },
-            { name: "Taco", multiplier: 1.0, display: "+100%" },
-            { name: "Meteor", multiplier: 1.0, display: "+100%" },
-            { name: "Blackhole", multiplier: 1.0, display: "+100%" },
-            { name: "Radioactive", multiplier: 1.1, display: "+110%" },
-            { name: "Galaxy", multiplier: 1.2, display: "+120%" },
-            { name: "Magmatic", multiplier: 1.4, display: "+140%" },
-            { name: "Fishing Master", multiplier: 2.0, display: "+200%" },
-            { name: "Disco", multiplier: 2.0, display: "+200%" }
-        ];
+            <!-- Add to collection button – appears only when a brainrot is selected -->
+            <div id="addToColWrap" class="add-to-col-wrap">
+                <button id="btnAddToCol" class="btn--add-col">
+                    <span>＋</span> <span id="addToColLabel">Add to Collection</span>
+                </button>
+            </div>
 
-        // Combine all mutations for display
-        const allMutations = [...baseMutations, ...stackableMutations];
+            <div class="statsRow">
+                <div class="statMini">
+                    <div class="statMini__label">Base Stat</div>
+                    <div class="statMini__value" id="baseStat">—</div>
+                    <div class="statMini__sub">$ / Fish</div>
+                </div>
+                <div class="statMini">
+                    <div class="statMini__label">Mutation Total</div>
+                    <div class="statMini__value" id="mutationTotal">0%</div>
+                    <div class="statMini__sub">stacked</div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="grid2">
+                <div class="field">
+                    <div class="label-row"><label class="label">Rank</label><span class="help">+15% per rank</span></div>
+                    <div class="radio-input" id="rankRadio">
+                        <label><input value="0" name="rank-radio" type="radio" checked><span>0</span></label>
+                        <label><input value="1" name="rank-radio" type="radio"><span>1</span></label>
+                        <label><input value="2" name="rank-radio" type="radio"><span>2</span></label>
+                        <label><input value="3" name="rank-radio" type="radio"><span>3</span></label>
+                        <label><input value="4" name="rank-radio" type="radio"><span>4</span></label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Level</label>
+                    <div class="stepper">
+                        <button id="levelDown" class="stepper__btn">−</button>
+                        <input id="level" class="input stepper__input" type="number" min="1" value="1"/>
+                        <button id="levelUp" class="stepper__btn">+</button>
+                    </div>
+                    <div class="field__meta"><span class="help">+50% per level after 1</span></div>
+                </div>
+            </div>
+        </section>
 
-        // State
-        let selectedBrainrot = null;
-        let selectedMutations = [];
-        let currentRank = 0;
-        let currentLevel = 1;
+        <!-- MUTATIONS -->
+        <section class="card card--mutations">
+            <div class="card__head"><h2 class="card__title">Mutations</h2></div>
+            <p class="card__hint">Tap to toggle. Percentages stack (sum → multiplier).</p>
+            <div class="divider"></div>
+            <div id="mutationsList" class="chips"></div>
+            <div id="mutationError" class="msg msg--error" style="margin-top:12px;"></div>
+        </section>
 
-        // DOM Elements
-        const brainrotInput = document.getElementById('brainrot');
-        const suggestionsBox = document.getElementById('suggestions');
-        const btnClearBrainrot = document.getElementById('btnClearBrainrot');
-        const statusBadge = document.getElementById('statusBadge');
-        const errorMsg = document.getElementById('error');
-        const baseStat = document.getElementById('baseStat');
-        const mutationTotal = document.getElementById('mutationTotal');
-        const mutationsList = document.getElementById('mutationsList');
-        const levelInput = document.getElementById('level');
-        const levelDown = document.getElementById('levelDown');
-        const levelUp = document.getElementById('levelUp');
-        const rankRadios = document.querySelectorAll('input[name="rank-radio"]');
-        const finalStat = document.getElementById('finalStat');
-        const rankMul = document.getElementById('rankMul');
-        const levelMul = document.getElementById('levelMul');
-        const mutationMul = document.getElementById('mutationMul');
-        const formula = document.getElementById('formula');
-        const btnCalc = document.getElementById('btnCalc');
-        const btnReset = document.getElementById('btnReset');
-        const btnCopy = document.getElementById('btnCopy');
+        <!-- RESULT -->
+        <aside class="card card--result">
+            <div class="resultHero">
+                <div class="resultHero__label">Final Stat</div>
+                <div class="resultHero__value" id="finalStat">—</div>
+                <div class="resultHero__sub">$/Fish</div>
+            </div>
+            <div class="divider"></div>
+            <div class="breakdown">
+                <div class="row"><div class="row__k">Rank multiplier</div><div class="row__v" id="rankMul">—</div></div>
+                <div class="row"><div class="row__k">Level multiplier</div><div class="row__v" id="levelMul">—</div></div>
+                <div class="row"><div class="row__k">Mutation multiplier</div><div class="row__v" id="mutationMul">—</div></div>
+                <div class="divider"></div>
+                <div class="row row--big"><div class="row__k">Final Calculation</div><div class="row__v" id="formula">—</div></div>
+            </div>
+        </aside>
 
-        // Initialize mutations chips
-        allMutations.forEach((mutation, index) => {
-            const chip = document.createElement('div');
-            chip.className = 'chip';
-            chip.textContent = `${mutation.name} ${mutation.display}`;
-            chip.dataset.index = index;
-            chip.addEventListener('click', () => toggleMutation(index));
-            mutationsList.appendChild(chip);
-        });
+        <!-- COLLECTION (full-width) -->
+        <section class="card card--collection">
+            <div class="card__head">
+                <h2 class="card__title">🐟 My Collection</h2>
+                <button id="btnClearCollection" class="btn" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(255,68,68,0.4);color:#ff6b6b;">Clear All</button>
+            </div>
 
-        // Brainrot search functionality
-        brainrotInput.addEventListener('input', (e) => {
-            const search = e.target.value.toLowerCase();
-            if (!search) {
-                suggestionsBox.classList.remove('show');
-                return;
-            }
+            <!-- item list -->
+            <div id="collectionList" class="collection-list">
+                <div class="collection-empty" id="collectionEmpty">No brainrots yet — select one in the calculator above and hit the add button!</div>
+            </div>
 
-            const matches = Object.keys(brainrotData).filter(name => 
-                name.toLowerCase().includes(search)
-            );
+            <!-- stats bar -->
+            <div class="collection-stats">
+                <div class="collection-stat">
+                    <div class="collection-stat__label">Total Brainrots</div>
+                    <div class="collection-stat__value" id="colCount">0</div>
+                </div>
+                <div class="collection-stat">
+                    <div class="collection-stat__label">Total Base Value</div>
+                    <div class="collection-stat__value" id="colTotal">$0</div>
+                    <div class="collection-stat__sub">sum of all base stats</div>
+                </div>
+                <div class="collection-stat">
+                    <div class="collection-stat__label">💰 Earnings / Second</div>
+                    <div class="collection-stat__value collection-stat__value--pink" id="colPerSec">$0 / sec</div>
+                    <div class="collection-stat__sub" id="colPerSecSub">based on base values</div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
 
-            if (matches.length > 0) {
-                suggestionsBox.innerHTML = matches.map(name => 
-                    `<div class="listbox__item" data-name="${name}">${name} (${brainrotData[name].Rarity})</div>`
-                ).join('');
-                suggestionsBox.classList.add('show');
-            } else {
-                suggestionsBox.classList.remove('show');
-            }
-        });
+<script>
+// ================================================================
+//  DATA
+// ================================================================
+const brainrotData = {
+    "Tung Tung Sahur":{"FishValue":100,"Rarity":"Common"},
+    "Capuchino Assasino":{"FishValue":150,"Rarity":"Common"},
+    "Pipi Potato":{"FishValue":300,"Rarity":"Uncommon"},
+    "Capuchina Ballerina":{"FishValue":450,"Rarity":"Uncommon"},
+    "Salamino Penguino":{"FishValue":750,"Rarity":"Rare"},
+    "Fluriflura":{"FishValue":937,"Rarity":"Rare"},
+    "Tim Cheese":{"FishValue":1125,"Rarity":"Rare"},
+    "Orangutini Ananasini":{"FishValue":1875,"Rarity":"Epic"},
+    "Brr Brr Patapim":{"FishValue":3000,"Rarity":"Epic"},
+    "Udin Din Din Din Dun":{"FishValue":4500,"Rarity":"Epic"},
+    "Pipi Kiwi":{"FishValue":5250,"Rarity":"Epic"},
+    "Nooo My Hotspot":{"FishValue":3500,"Rarity":"Epic"},
+    "Chef Crabracadabra":{"FishValue":9000,"Rarity":"Legendary"},
+    "Boneca Ambalabu":{"FishValue":12000,"Rarity":"Legendary"},
+    "Cacto Hipopotamo":{"FishValue":13500,"Rarity":"Legendary"},
+    "Sigma Boy":{"FishValue":18000,"Rarity":"Legendary"},
+    "Capi Taco":{"FishValue":15000,"Rarity":"Legendary"},
+    "Tukanno Bananno":{"FishValue":32000,"Rarity":"Legendary"},
+    "Gorillo Watermelondrillo":{"FishValue":37500,"Rarity":"Mythic"},
+    "Tric Trac Barabum":{"FishValue":52500,"Rarity":"Mythic"},
+    "Avocadini Guffo":{"FishValue":63750,"Rarity":"Mythic"},
+    "Quivioli Ameleonni":{"FishValue":100000,"Rarity":"Mythic"},
+    "Tacorita Tacorito":{"FishValue":100000,"Rarity":"Mythic"},
+    "Friggo Camelo":{"FishValue":150000,"Rarity":"Mythic"},
+    "Glorbo Fruttodrillo":{"FishValue":187500,"Rarity":"Mythic"},
+    "Pakrahmatmamat":{"FishValue":225000,"Rarity":"Mythic"},
+    "Karkerkar Kurkur":{"FishValue":350000,"Rarity":"Mythic"},
+    "Candy Caney":{"FishValue":100000,"Rarity":"XMAS 25"},
+    "Santa Hotspot":{"FishValue":100000,"Rarity":"XMAS 25"},
+    "Elf Elf Sahur":{"FishValue":40000,"Rarity":"XMAS 25"},
+    "Ginger Sekolah":{"FishValue":1000000,"Rarity":"XMAS 25"},
+    "Ginger 67":{"FishValue":10000,"Rarity":"XMAS 25"},
+    "La Vacca Saturnita":{"FishValue":1000000,"Rarity":"Secret"},
+    "Tic Tac Sahur":{"FishValue":1750000,"Rarity":"Secret"},
+    "Pot Hotspot":{"FishValue":2250000,"Rarity":"Secret"},
+    "Cocofanto Elefanto":{"FishValue":2375000,"Rarity":"Secret"},
+    "Job Job Sahur":{"FishValue":2500000,"Rarity":"Secret"},
+    "La Cucaracha":{"FishValue":2750000,"Rarity":"Secret"},
+    "La Grande Combination":{"FishValue":3000000,"Rarity":"Secret"},
+    "Cuadramat & Pak":{"FishValue":3750000,"Rarity":"Secret"},
+    "Dul Dul Dul":{"FishValue":4500000,"Rarity":"Secret"},
+    "Cavallo Virtuoso":{"FishValue":5000000,"Rarity":"Secret"},
+    "Nuclearo Dinossauro":{"FishValue":5000000,"Rarity":"Exotic"},
+    "67":{"FishValue":5500000,"Rarity":"Exotic"},
+    "Cupcake Koala":{"FishValue":6000000,"Rarity":"Exotic"},
+    "Esok Sekolah":{"FishValue":6500000,"Rarity":"Exotic"},
+    "Girafa Celestre":{"FishValue":8000000,"Rarity":"Exotic"},
+    "Chillin Chilli":{"FishValue":10000000,"Rarity":"Exotic"},
+    "Swag Soda":{"FishValue":12500000,"Rarity":"Exotic"},
+    "Matteo":{"FishValue":15000000,"Rarity":"Exotic"},
+    "Strawberelli Flamingelli":{"FishValue":15500000,"Rarity":"Exotic"},
+    "Ketupat Kepat":{"FishValue":16000000,"Rarity":"Exotic"},
+    "Torrtuginni Dragonfrutini":{"FishValue":18000000,"Rarity":"Exotic"},
+    "Skull Skull Skull":{"FishValue":18000000,"Rarity":"Exotic"},
+    "Cocosini Mama":{"FishValue":20000000,"Rarity":"Exotic"},
+    "Mangolini Parrocini":{"FishValue":20000000,"Rarity":"Exotic"},
+    "Pipi Corni":{"FishValue":25000000,"Rarity":"Exotic"},
+    "Ganganzelli Trulala":{"FishValue":22500000,"Rarity":"OG"},
+    "Strawberry Elephant":{"FishValue":50000000,"Rarity":"OG"},
+    "Crystalini Ananassini":{"FishValue":55000000,"Rarity":"OG"},
+    "Meowl":{"FishValue":65000000,"Rarity":"OG"},
+    "Spiuniru Golubiru":{"FishValue":70000000,"Rarity":"OG"},
+    "Tigroligre Frutonni":{"FishValue":80000000,"Rarity":"OG"},
+    "Tralalelodon":{"FishValue":55000000,"Rarity":"Event"},
+    "Orcadon":{"FishValue":58500000,"Rarity":"Event"},
+    "Blingo Tentacolo":{"FishValue":62500000,"Rarity":"Event"},
+    "Eviledon":{"FishValue":65000000,"Rarity":"Event"},
+    "Moby Bobby":{"FishValue":75000000,"Rarity":"Event"},
+    "Dragon Cannelloni":{"FishValue":75000000,"Rarity":"Divine"},
+    "Alessio":{"FishValue":80000000,"Rarity":"Divine"},
+    "Bombini Gusini":{"FishValue":85000000,"Rarity":"Divine"},
+    "Mariachi Skeletoni":{"FishValue":87500000,"Rarity":"Divine"},
+    "Chicleteira Bicicleteira":{"FishValue":90000000,"Rarity":"Divine"},
+    "Piccione Maccina":{"FishValue":92500000,"Rarity":"Divine"},
+    "Crabbo Limonetta":{"FishValue":95000000,"Rarity":"Divine"},
+    "Bandito Axolito":{"FishValue":110000000,"Rarity":"Divine"},
+    "Stoppo Luminino":{"FishValue":120000000,"Rarity":"Divine"},
+    "Money Money Man":{"FishValue":125000000,"Rarity":"GOD"},
+    "Signore Carapace":{"FishValue":175000000,"Rarity":"GOD"},
+    "Karloo":{"FishValue":225000000,"Rarity":"GOD"},
+    "Mastodontico Telepiedone":{"FishValue":325000000,"Rarity":"GOD"},
+    "Pirulitoita Bicicleteira":{"FishValue":420000000,"Rarity":"GOD"},
+    "Presento Camelo":{"FishValue":15000,"Rarity":"Limited"},
+    "Festive 67":{"FishValue":25000,"Rarity":"Limited"},
+    "La Vacca Presento":{"FishValue":50000,"Rarity":"Limited"},
+    "Cooki":{"FishValue":225000,"Rarity":"Limited"},
+    "25":{"FishValue":350000,"Rarity":"Limited"},
+    "Santteo":{"FishValue":350000,"Rarity":"Limited"},
+    "2026":{"FishValue":450000,"Rarity":"Limited"},
+    "Buff Tung Tung Sahur":{"FishValue":5250,"Rarity":"Exclusive"},
+    "Buff Tim Cheese":{"FishValue":7500,"Rarity":"Exclusive"},
+    "Buff Fluriflura":{"FishValue":9500,"Rarity":"Exclusive"},
+    "Buff Orangutini Ananasini":{"FishValue":1500,"Rarity":"Exclusive"},
+    "Buff Gorillo Watermelondrillo":{"FishValue":30000,"Rarity":"Exclusive"},
+    "Joe Pork":{"FishValue":25000,"Rarity":"Admin"},
+    "Smurf Cat":{"FishValue":75000,"Rarity":"Admin"},
+    "Skibo Boi":{"FishValue":250000,"Rarity":"Admin"},
+    "Tuesday Hand":{"FishValue":350000,"Rarity":"Admin"}
+};
 
-        suggestionsBox.addEventListener('click', (e) => {
-            if (e.target.classList.contains('listbox__item')) {
-                const name = e.target.dataset.name;
-                selectBrainrot(name);
-            }
-        });
+// Rarity drop-chance map (from game data). 0 = not obtainable via normal drops.
+const rarityChance = {
+    "Common":    39.57,
+    "Uncommon":  28.96,
+    "Rare":      11.61,
+    "Epic":       8.59,
+    "Legendary":  5.8,
+    "Mythic":     3,
+    "Secret":     1.5,
+    "Exotic":     0.8,
+    "OG":         0.1,
+    "Event":      0.05,
+    "Divine":     0.02,
+    "GOD":        0.002,
+    "XMAS 25":    0,
+    "Limited":    0,
+    "Exclusive":  0,
+    "Admin":      0
+};
 
-        btnClearBrainrot.addEventListener('click', () => {
-            brainrotInput.value = '';
-            selectedBrainrot = null;
-            suggestionsBox.classList.remove('show');
-            baseStat.textContent = '—';
-            errorMsg.textContent = '';
-            statusBadge.textContent = 'Ready';
-            calculate();
-        });
+// Human-friendly label for zero-chance rarities
+const raritySpecialLabel = {
+    "XMAS 25":  "Past Event",
+    "Limited":  "Pay To Win",
+    "Exclusive":"Pay To Win",
+    "Admin":    "Admin Abuse"
+};
 
-        function selectBrainrot(name) {
-            selectedBrainrot = name;
-            brainrotInput.value = name;
-            suggestionsBox.classList.remove('show');
-            baseStat.textContent = `$${brainrotData[name].FishValue.toLocaleString()}`;
-            errorMsg.textContent = '';
-            statusBadge.textContent = 'Selected';
-            calculate();
+const baseMutations = [
+    { name:"Gold",    multiplier:1.5, display:"+50%",  isBase:true },
+    { name:"Diamond", multiplier:2.0, display:"+100%", isBase:true }
+];
+const stackableMutations = [
+    { name:"Snowy",          multiplier:0.5, display:"+50%"  },
+    { name:"Sakura",         multiplier:0.6, display:"+60%"  },
+    { name:"Tornado",        multiplier:0.7, display:"+70%"  },
+    { name:"Stinky",         multiplier:0.8, display:"+80%"  },
+    { name:"Lightning",      multiplier:0.9, display:"+90%"  },
+    { name:"Taco",           multiplier:1.0, display:"+100%" },
+    { name:"Meteor",         multiplier:1.0, display:"+100%" },
+    { name:"Blackhole",      multiplier:1.0, display:"+100%" },
+    { name:"Radioactive",    multiplier:1.1, display:"+110%" },
+    { name:"Galaxy",         multiplier:1.2, display:"+120%" },
+    { name:"Magmatic",       multiplier:1.4, display:"+140%" },
+    { name:"Fishing Master", multiplier:2.0, display:"+200%" },
+    { name:"Disco",          multiplier:2.0, display:"+200%" }
+];
+const allMutations = [...baseMutations, ...stackableMutations];
+
+// ================================================================
+//  STATE
+// ================================================================
+let selectedBrainrot  = null;
+let selectedMutations = [];
+let currentRank       = 0;
+let currentLevel      = 1;
+
+let collection = [];
+function loadCollection() {
+    try { collection = JSON.parse(localStorage.getItem('brainrot-collection')) || []; }
+    catch(e) { collection = []; }
+}
+function saveCollection() {
+    localStorage.setItem('brainrot-collection', JSON.stringify(collection));
+}
+
+// ================================================================
+//  DOM refs – calculator
+// ================================================================
+const brainrotInput    = document.getElementById('brainrot');
+const suggestionsBox   = document.getElementById('suggestions');
+const btnClearBrainrot = document.getElementById('btnClearBrainrot');
+const statusBadge      = document.getElementById('statusBadge');
+const errorMsg         = document.getElementById('error');
+const baseStatEl       = document.getElementById('baseStat');
+const mutationTotalEl  = document.getElementById('mutationTotal');
+const mutationsList    = document.getElementById('mutationsList');
+const levelInput       = document.getElementById('level');
+const levelDown        = document.getElementById('levelDown');
+const levelUp          = document.getElementById('levelUp');
+const rankRadios       = document.querySelectorAll('input[name="rank-radio"]');
+const finalStat        = document.getElementById('finalStat');
+const rankMul          = document.getElementById('rankMul');
+const levelMul         = document.getElementById('levelMul');
+const mutationMul      = document.getElementById('mutationMul');
+const formulaEl        = document.getElementById('formula');
+const btnCalc          = document.getElementById('btnCalc');
+const btnReset         = document.getElementById('btnReset');
+const btnCopy          = document.getElementById('btnCopy');
+const mutationError    = document.getElementById('mutationError');
+
+// DOM refs – add-to-collection
+const addToColWrap     = document.getElementById('addToColWrap');
+const btnAddToCol      = document.getElementById('btnAddToCol');
+const addToColLabel    = document.getElementById('addToColLabel');
+
+// DOM refs – collection
+const collectionList        = document.getElementById('collectionList');
+const collectionEmpty       = document.getElementById('collectionEmpty');
+const colCount              = document.getElementById('colCount');
+const colTotal              = document.getElementById('colTotal');
+const colPerSec             = document.getElementById('colPerSec');
+const colPerSecSub          = document.getElementById('colPerSecSub');
+const btnClearCollection    = document.getElementById('btnClearCollection');
+
+// ================================================================
+//  HELPERS – rarity display
+// ================================================================
+
+// Returns a sanitised class-name key for a rarity string (handles "XMAS 25" etc.)
+function rarityKey(r) {
+    return r.replace(/[\s\d]/g, '');   // "XMAS 25" → "XMAS"
+}
+
+// Build the chance string: "1.5%" or a special label for 0-chance rarities
+function chanceLabel(rarity) {
+    const c = rarityChance[rarity];
+    if (c === undefined) return '';
+    if (c === 0) return raritySpecialLabel[rarity] || '—';
+    // Format nicely: strip trailing zeros
+    const str = c % 1 === 0 ? c.toString() : c.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+    return str + '%';
+}
+
+// CSS class for the rarity badge pill
+function rarityBadgeClass(rarity) {
+    // normalise: "XMAS 25" → "XMAS25"
+    return 'rb-' + rarity.replace(/\s+/g, '');
+}
+
+// ================================================================
+//  THEME
+// ================================================================
+const themeButtons = document.querySelectorAll('.theme-btn');
+function applyTheme(t) {
+    document.body.setAttribute('data-theme', t);
+    themeButtons.forEach(b => b.classList.toggle('active', b.dataset.theme === t));
+    localStorage.setItem('brainrot-theme', t);
+}
+(function(){ const s=localStorage.getItem('brainrot-theme'); if(s) applyTheme(s); })();
+themeButtons.forEach(b => b.addEventListener('click', () => applyTheme(b.dataset.theme)));
+
+// ================================================================
+//  MUTATIONS CHIPS
+// ================================================================
+const GOLD_IDX = 0, DIAMOND_IDX = 1;
+
+allMutations.forEach((m, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = `${m.name} ${m.display}`;
+    chip.dataset.index = i;
+    chip.addEventListener('click', () => toggleMutation(i));
+    mutationsList.appendChild(chip);
+});
+
+function toggleMutation(index) {
+    const chip = mutationsList.children[index];
+    const on = selectedMutations.includes(index);
+    if (!on) {
+        if (index === GOLD_IDX && selectedMutations.includes(DIAMOND_IDX)) {
+            mutationError.textContent = "⚠ Not possible — Diamond is already selected. You can only have one base mutation."; return;
         }
-
-        function toggleMutation(index) {
-            const chip = mutationsList.children[index];
-            if (selectedMutations.includes(index)) {
-                selectedMutations = selectedMutations.filter(i => i !== index);
-                chip.classList.remove('active');
-            } else {
-                selectedMutations.push(index);
-                chip.classList.add('active');
-            }
-            updateMutationTotal();
-            calculate();
+        if (index === DIAMOND_IDX && selectedMutations.includes(GOLD_IDX)) {
+            mutationError.textContent = "⚠ Not possible — Gold is already selected. You can only have one base mutation."; return;
         }
+        selectedMutations.push(index);
+        chip.classList.add('active');
+    } else {
+        selectedMutations = selectedMutations.filter(i => i !== index);
+        chip.classList.remove('active');
+    }
+    mutationError.textContent = '';
+    updateMutationTotal();
+    calculate();
+}
+function updateMutationTotal() {
+    mutationTotalEl.textContent = `${selectedMutations.reduce((s,i) => s + allMutations[i].multiplier*100, 0).toFixed(0)}%`;
+}
 
-        function updateMutationTotal() {
-            const totalPercent = selectedMutations.reduce((sum, index) => {
-                return sum + (allMutations[index].multiplier * 100);
-            }, 0);
-            mutationTotal.textContent = `${totalPercent.toFixed(0)}%`;
-        }
+// ================================================================
+//  CALCULATOR SEARCH  (now includes rarity badge + chance)
+// ================================================================
+brainrotInput.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    if (!q) { suggestionsBox.classList.remove('show'); return; }
+    const hits = Object.keys(brainrotData).filter(n => n.toLowerCase().includes(q));
+    if (hits.length) {
+        suggestionsBox.innerHTML = hits.map(n => {
+            const rarity   = brainrotData[n].Rarity;
+            const badgeCls = rarityBadgeClass(rarity);
+            const chance   = chanceLabel(rarity);
+            return `<div class="listbox__item" data-name="${n}">
+                <span class="rarity-dot rarity-${rarityKey(rarity)}"></span>
+                <span class="listbox__item-name">${n}</span>
+                <span class="listbox__item-meta">
+                    <span class="listbox__item-rarity ${badgeCls}">${rarity}</span>
+                    <span class="listbox__item-chance">${chance}</span>
+                </span>
+            </div>`;
+        }).join('');
+        suggestionsBox.classList.add('show');
+    } else { suggestionsBox.classList.remove('show'); }
+});
 
-        // Level controls
-        levelUp.addEventListener('click', () => {
-            currentLevel = parseInt(levelInput.value) + 1;
-            levelInput.value = currentLevel;
-            calculate();
+suggestionsBox.addEventListener('click', e => {
+    const it = e.target.closest('.listbox__item');
+    if(it) selectBrainrot(it.dataset.name);
+});
+
+btnClearBrainrot.addEventListener('click', () => {
+    brainrotInput.value=''; selectedBrainrot=null;
+    suggestionsBox.classList.remove('show');
+    baseStatEl.textContent='—'; errorMsg.textContent=''; statusBadge.textContent='Ready';
+    updateAddToColButton();
+    calculate();
+});
+
+function selectBrainrot(name) {
+    selectedBrainrot=name; brainrotInput.value=name;
+    suggestionsBox.classList.remove('show');
+    baseStatEl.textContent=`$${brainrotData[name].FishValue.toLocaleString()}`;
+    errorMsg.textContent=''; statusBadge.textContent='Selected';
+    updateAddToColButton();
+    calculate();
+}
+
+// ================================================================
+//  ADD-TO-COLLECTION BUTTON STATE
+// ================================================================
+function updateAddToColButton() {
+    if (!selectedBrainrot) {
+        addToColWrap.classList.remove('visible');
+        btnAddToCol.classList.remove('already-in');
+        addToColLabel.textContent = 'Add to Collection';
+        return;
+    }
+    addToColWrap.classList.add('visible');
+    if (collection.includes(selectedBrainrot)) {
+        btnAddToCol.classList.add('already-in');
+        addToColLabel.textContent = 'Already in Collection';
+    } else {
+        btnAddToCol.classList.remove('already-in');
+        addToColLabel.textContent = 'Add to Collection';
+    }
+}
+
+btnAddToCol.addEventListener('click', () => {
+    if (!selectedBrainrot || collection.includes(selectedBrainrot)) return;
+    collection.push(selectedBrainrot);
+    saveCollection();
+    renderCollection();
+    updateAddToColButton();
+});
+
+// ================================================================
+//  LEVEL / RANK
+// ================================================================
+levelUp.addEventListener('click', () => { currentLevel=parseInt(levelInput.value)+1; levelInput.value=currentLevel; calculate(); });
+levelDown.addEventListener('click', () => { if(currentLevel>1){currentLevel=parseInt(levelInput.value)-1; levelInput.value=currentLevel; calculate();} });
+levelInput.addEventListener('input', e => { currentLevel=Math.max(1,parseInt(e.target.value)||1); levelInput.value=currentLevel; calculate(); });
+rankRadios.forEach(r => r.addEventListener('change', e => { currentRank=parseInt(e.target.value); calculate(); }));
+
+// ================================================================
+//  CALCULATE
+// ================================================================
+function calculate() {
+    if (!selectedBrainrot) {
+        [finalStat,rankMul,levelMul,mutationMul,formulaEl].forEach(el=>el.textContent='—'); return;
+    }
+    const base = brainrotData[selectedBrainrot].FishValue;
+    const rm   = 1 + currentRank*0.15;
+    const lm   = 1 + (currentLevel-1)*0.5;
+    let mm=0, hasB=false;
+    selectedMutations.forEach(i => { if(allMutations[i].isBase){mm=Math.max(mm,allMutations[i].multiplier);hasB=true;} });
+    if(!hasB) mm=1;
+    selectedMutations.forEach(i => { if(!allMutations[i].isBase) mm+=allMutations[i].multiplier; });
+    const val = base*rm*lm*mm;
+    finalStat.textContent   = `$${val.toLocaleString(undefined,{maximumFractionDigits:0})}`;
+    rankMul.textContent     = `${rm.toFixed(2)}x`;
+    levelMul.textContent    = `${lm.toFixed(2)}x`;
+    mutationMul.textContent = `${mm.toFixed(2)}x`;
+    formulaEl.textContent   = `${base.toLocaleString()} × ${rm.toFixed(2)} × ${lm.toFixed(2)} × ${mm.toFixed(2)}`;
+    statusBadge.textContent = 'Calculated';
+}
+
+// ================================================================
+//  BUTTONS – calculator
+// ================================================================
+btnCalc.addEventListener('click', calculate);
+btnReset.addEventListener('click', () => {
+    brainrotInput.value=''; selectedBrainrot=null; selectedMutations=[]; currentRank=0; currentLevel=1;
+    levelInput.value=1; rankRadios[0].checked=true;
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    baseStatEl.textContent='—'; mutationTotalEl.textContent='0%';
+    [finalStat,rankMul,levelMul,mutationMul,formulaEl].forEach(el=>el.textContent='—');
+    statusBadge.textContent='Ready'; errorMsg.textContent=''; mutationError.textContent='';
+    updateAddToColButton();
+});
+btnCopy.addEventListener('click', () => {
+    if(finalStat.textContent!=='—'){
+        navigator.clipboard.writeText(finalStat.textContent).then(()=>{
+            statusBadge.textContent='Copied!';
+            setTimeout(()=>statusBadge.textContent='Calculated',2000);
         });
+    }
+});
 
-        levelDown.addEventListener('click', () => {
-            if (currentLevel > 1) {
-                currentLevel = parseInt(levelInput.value) - 1;
-                levelInput.value = currentLevel;
-                calculate();
-            }
+// ================================================================
+//  COLLECTION
+// ================================================================
+
+// Clear all
+btnClearCollection.addEventListener('click', () => {
+    if (collection.length === 0) return;
+    collection = [];
+    saveCollection();
+    renderCollection();
+    updateAddToColButton(); // refresh in case current brainrot was in it
+});
+
+// Remove single item (event delegation)
+collectionList.addEventListener('click', e => {
+    const btn = e.target.closest('.collection-item__remove');
+    if (!btn) return;
+    const name = btn.dataset.name;
+    collection = collection.filter(n => n !== name);
+    saveCollection();
+    renderCollection();
+    updateAddToColButton(); // refresh button if we just removed the currently selected one
+});
+
+// ================================================================
+//  RENDER COLLECTION + STATS
+// ================================================================
+function calcEarningsPerSec() {
+    return collection.reduce((sum, name) => sum + (brainrotData[name]?.FishValue || 0), 0);
+}
+
+function renderCollection() {
+    // Remove all existing items (keep the empty placeholder)
+    const items = collectionList.querySelectorAll('.collection-item');
+    items.forEach(el => el.remove());
+
+    if (collection.length === 0) {
+        collectionEmpty.style.display = 'block';
+    } else {
+        collectionEmpty.style.display = 'none';
+        const sorted = [...collection].sort((a,b) => brainrotData[b].FishValue - brainrotData[a].FishValue);
+        sorted.forEach(name => {
+            const data  = brainrotData[name];
+            const el    = document.createElement('div');
+            el.className = 'collection-item';
+            el.innerHTML = `
+                <span class="rarity-dot rarity-${rarityKey(data.Rarity)}"></span>
+                <div style="flex:1;min-width:0;">
+                    <div class="collection-item__name">${name}</div>
+                    <div class="collection-item__rarity">${data.Rarity}</div>
+                </div>
+                <div class="collection-item__value">$${data.FishValue.toLocaleString()}</div>
+                <button class="collection-item__remove" data-name="${name}" title="Remove">×</button>
+            `;
+            collectionList.appendChild(el);
         });
+    }
 
-        levelInput.addEventListener('input', (e) => {
-            currentLevel = Math.max(1, parseInt(e.target.value) || 1);
-            levelInput.value = currentLevel;
-            calculate();
-        });
+    // Update stats
+    const total  = collection.reduce((s,n) => s + (brainrotData[n]?.FishValue||0), 0);
+    const perSec = calcEarningsPerSec();
 
-        // Rank controls
-        rankRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                currentRank = parseInt(e.target.value);
-                calculate();
-            });
-        });
+    colCount.textContent  = collection.length.toLocaleString();
+    colTotal.textContent  = `$${total.toLocaleString()}`;
+    colPerSec.textContent = `$${perSec.toLocaleString()} / sec`;
 
-        // Calculate function
-        function calculate() {
-            if (!selectedBrainrot) {
-                finalStat.textContent = '—';
-                rankMul.textContent = '—';
-                levelMul.textContent = '—';
-                mutationMul.textContent = '—';
-                formula.textContent = '—';
-                return;
-            }
+    if (perSec > 0) {
+        colPerSecSub.textContent = `$${(perSec*60).toLocaleString()}/min · $${(perSec*3600).toLocaleString()}/hr`;
+    } else {
+        colPerSecSub.textContent = 'Add brainrots to see earnings';
+    }
+}
 
-            const baseValue = brainrotData[selectedBrainrot].FishValue;
-            
-            // Rank multiplier: 1 + (rank * 0.15)
-            const rankMultiplier = 1 + (currentRank * 0.15);
-            
-            // Level multiplier: 1 + ((level - 1) * 0.5)
-            const levelMultiplier = 1 + ((currentLevel - 1) * 0.5);
-            
-            // Mutation multiplier calculation
-            // Base mutations REPLACE the 1x default
-            // Stackable mutations ADD to the base (starting from 1x if no base mutation)
-            let mutationMultiplier = 0;
-            let hasBaseMutation = false;
-            
-            selectedMutations.forEach(index => {
-                const mutation = allMutations[index];
-                if (mutation.isBase) {
-                    // Base mutation replaces - only use the highest if multiple selected
-                    mutationMultiplier = Math.max(mutationMultiplier, mutation.multiplier);
-                    hasBaseMutation = true;
-                }
-            });
-            
-            // If no base mutation was selected, start with 1
-            if (!hasBaseMutation) {
-                mutationMultiplier = 1;
-            }
-            
-            // Add stackable mutations on top
-            selectedMutations.forEach(index => {
-                const mutation = allMutations[index];
-                if (!mutation.isBase) {
-                    mutationMultiplier += mutation.multiplier;
-                }
-            });
-            
-            const finalValue = baseValue * rankMultiplier * levelMultiplier * mutationMultiplier;
-            
-            finalStat.textContent = `$${finalValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
-            rankMul.textContent = `${rankMultiplier.toFixed(2)}x`;
-            levelMul.textContent = `${levelMultiplier.toFixed(2)}x`;
-            mutationMul.textContent = `${mutationMultiplier.toFixed(2)}x`;
-            formula.textContent = `${baseValue.toLocaleString()} × ${rankMultiplier.toFixed(2)} × ${levelMultiplier.toFixed(2)} × ${mutationMultiplier.toFixed(2)}`;
-            statusBadge.textContent = 'Calculated';
-        }
+// ================================================================
+//  INIT
+// ================================================================
+loadCollection();
+renderCollection();
 
-        // Button handlers
-        btnCalc.addEventListener('click', calculate);
-
-        btnReset.addEventListener('click', () => {
-            brainrotInput.value = '';
-            selectedBrainrot = null;
-            selectedMutations = [];
-            currentRank = 0;
-            currentLevel = 1;
-            levelInput.value = 1;
-            rankRadios[0].checked = true;
-            
-            document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-            
-            baseStat.textContent = '—';
-            mutationTotal.textContent = '0%';
-            finalStat.textContent = '—';
-            rankMul.textContent = '—';
-            levelMul.textContent = '—';
-            mutationMul.textContent = '—';
-            formula.textContent = '—';
-            statusBadge.textContent = 'Ready';
-            errorMsg.textContent = '';
-        });
-
-        btnCopy.addEventListener('click', () => {
-            if (finalStat.textContent !== '—') {
-                navigator.clipboard.writeText(finalStat.textContent);
-                statusBadge.textContent = 'Copied!';
-                setTimeout(() => statusBadge.textContent = 'Calculated', 2000);
-            }
-        });
-
-        // Close suggestions when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!brainrotInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-                suggestionsBox.classList.remove('show');
-            }
-        });
-    </script>
+// Close any open listbox on outside click
+document.addEventListener('click', e => {
+    if (!brainrotInput.contains(e.target) && !suggestionsBox.contains(e.target))
+        suggestionsBox.classList.remove('show');
+});
+</script>
 </body>
 </html>
