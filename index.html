@@ -795,10 +795,14 @@
             "Tuesday Hand": { FishValue: 350000, Rarity: "Admin" }
         };
 
-        // Mutations data
-        const mutations = [
+        // Mutations data - separated by type
+        const baseMutations = [
+            { name: "Gold", multiplier: 1.5, display: "+50%", isBase: true },
+            { name: "Diamond", multiplier: 2.0, display: "+100%", isBase: true }
+        ];
+
+        const stackableMutations = [
             { name: "Snowy", multiplier: 0.5, display: "+50%" },
-            { name: "Gold", multiplier: 1.5, display: "+50%" },
             { name: "Sakura", multiplier: 0.6, display: "+60%" },
             { name: "Tornado", multiplier: 0.7, display: "+70%" },
             { name: "Stinky", multiplier: 0.8, display: "+80%" },
@@ -809,10 +813,12 @@
             { name: "Radioactive", multiplier: 1.1, display: "+110%" },
             { name: "Galaxy", multiplier: 1.2, display: "+120%" },
             { name: "Magmatic", multiplier: 1.4, display: "+140%" },
-            { name: "Diamond", multiplier: 2.0, display: "+200%" },
             { name: "Fishing Master", multiplier: 2.0, display: "+200%" },
             { name: "Disco", multiplier: 2.0, display: "+200%" }
         ];
+
+        // Combine all mutations for display
+        const allMutations = [...baseMutations, ...stackableMutations];
 
         // State
         let selectedBrainrot = null;
@@ -843,7 +849,7 @@
         const btnCopy = document.getElementById('btnCopy');
 
         // Initialize mutations chips
-        mutations.forEach((mutation, index) => {
+        allMutations.forEach((mutation, index) => {
             const chip = document.createElement('div');
             chip.className = 'chip';
             chip.textContent = `${mutation.name} ${mutation.display}`;
@@ -916,7 +922,7 @@
 
         function updateMutationTotal() {
             const totalPercent = selectedMutations.reduce((sum, index) => {
-                return sum + (mutations[index].multiplier * 100);
+                return sum + (allMutations[index].multiplier * 100);
             }, 0);
             mutationTotal.textContent = `${totalPercent.toFixed(0)}%`;
         }
@@ -969,10 +975,32 @@
             // Level multiplier: 1 + ((level - 1) * 0.5)
             const levelMultiplier = 1 + ((currentLevel - 1) * 0.5);
             
-            // Mutation multiplier: sum of all selected mutations
-            let mutationMultiplier = 1;
+            // Mutation multiplier calculation
+            // Base mutations REPLACE the 1x default
+            // Stackable mutations ADD to the base (starting from 1x if no base mutation)
+            let mutationMultiplier = 0;
+            let hasBaseMutation = false;
+            
             selectedMutations.forEach(index => {
-                mutationMultiplier += mutations[index].multiplier;
+                const mutation = allMutations[index];
+                if (mutation.isBase) {
+                    // Base mutation replaces - only use the highest if multiple selected
+                    mutationMultiplier = Math.max(mutationMultiplier, mutation.multiplier);
+                    hasBaseMutation = true;
+                }
+            });
+            
+            // If no base mutation was selected, start with 1
+            if (!hasBaseMutation) {
+                mutationMultiplier = 1;
+            }
+            
+            // Add stackable mutations on top
+            selectedMutations.forEach(index => {
+                const mutation = allMutations[index];
+                if (!mutation.isBase) {
+                    mutationMultiplier += mutation.multiplier;
+                }
             });
             
             const finalValue = baseValue * rankMultiplier * levelMultiplier * mutationMultiplier;
