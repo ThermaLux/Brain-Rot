@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Fishing Brainrot - Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff10f0;
+            --neon-cyan: #00fff9;
+            --neon-yellow: #fff700;
+            --dark-bg: #0a0e27;
+            --card-bg: #151b3d;
+            --text-primary: #e0e6ff;
+            --text-secondary: #8891b5;
+            --border-glow: rgba(0, 255, 249, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 16, 240, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 249, 0.1) 0%, transparent 50%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 249, 0.03) 0px,
+                transparent 1px,
+                transparent 2px,
+                rgba(0, 255, 249, 0.03) 3px
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .page {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header__left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 249, 0.4);
+        }
+
+        .brand__title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .brand__sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .header__right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 2px solid var(--neon-cyan);
+            background: rgba(0, 255, 249, 0.1);
+            color: var(--text-primary);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 249, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 249, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, rgba(255, 16, 240, 0.3), rgba(0, 255, 249, 0.3));
+            border-color: var(--neon-pink);
+        }
+
+        .btn--primary:hover {
+            box-shadow: 0 0 20px rgba(255, 16, 240, 0.5);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 255, 249, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan), var(--neon-yellow), var(--neon-pink));
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background-size: 300% 300%;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .card:hover::before {
+            opacity: 0.3;
+        }
+
+        .card--inputs {
+            grid-column: 1 / 2;
+        }
+
+        .card--mutations {
+            grid-column: 2 / 3;
+        }
+
+        .card--result {
+            grid-column: 3 / 4;
+        }
+
+        .card__head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card__title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            background: rgba(0, 255, 249, 0.2);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--neon-cyan);
+        }
+
+        .combo {
+            position: relative;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(10, 14, 39, 0.6);
+            border: 2px solid rgba(0, 255, 249, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 249, 0.4);
+            background: rgba(10, 14, 39, 0.9);
+        }
+
+        .listbox {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 300px;
+            overflow-y: auto;
+            background: var(--card-bg);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 8px;
+            margin-top: 5px;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0, 255, 249, 0.3);
+        }
+
+        .listbox.show {
+            display: block;
+        }
+
+        .listbox__item {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 255, 249, 0.1);
+            transition: all 0.2s;
+        }
+
+        .listbox__item:hover {
+            background: rgba(0, 255, 249, 0.1);
+        }
+
+        .iconbtn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+
+        .iconbtn:hover {
+            color: var(--neon-pink);
+        }
+
+        .statsRow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .statMini {
+            background: rgba(0, 255, 249, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 249, 0.2);
+        }
+
+        .statMini__label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .statMini__value {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--neon-yellow);
+        }
+
+        .statMini__sub {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            margin: 20px 0;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .help {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .radio-input {
+            display: flex;
+            gap: 5px;
+            position: relative;
+            background: rgba(10, 14, 39, 0.6);
+            padding: 5px;
+            border-radius: 8px;
+            border: 2px solid rgba(0, 255, 249, 0.3);
+        }
+
+        .radio-input label {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .radio-input input {
+            display: none;
+        }
+
+        .radio-input span {
+            display: block;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+
+        .radio-input input:checked + span {
+            background: linear-gradient(135deg, rgba(255, 16, 240, 0.3), rgba(0, 255, 249, 0.3));
+            color: var(--neon-cyan);
+        }
+
+        .stepper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .stepper__btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 249, 0.1);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 900;
+        }
+
+        .stepper__btn:hover {
+            background: rgba(0, 255, 249, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 249, 0.4);
+        }
+
+        .stepper__input {
+            flex: 1;
+            text-align: center;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            padding: 10px 15px;
+            background: rgba(10, 14, 39, 0.6);
+            border: 2px solid rgba(136, 145, 181, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .chip:hover {
+            border-color: var(--neon-pink);
+            transform: translateY(-2px);
+        }
+
+        .chip.active {
+            background: linear-gradient(135deg, rgba(255, 16, 240, 0.2), rgba(0, 255, 249, 0.2));
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 249, 0.3);
+        }
+
+        .resultHero {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .resultHero__label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .resultHero__value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .resultHero__sub {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .breakdown {
+            margin-top: 20px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 255, 249, 0.1);
+        }
+
+        .row__k {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .row__v {
+            color: var(--neon-cyan);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .row--big {
+            font-size: 1.1rem;
+            padding-top: 15px;
+        }
+
+        .row--big .row__k {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .row--big .row__v {
+            color: var(--neon-yellow);
+            font-size: 1.1rem;
+        }
+
+        .msg--error {
+            color: #ff4444;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .card__hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .layout {
+                grid-template-columns: 1fr 1fr;
+            }
+            .card--result {
+                grid-column: 1 / 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .card--inputs,
+            .card--mutations,
+            .card--result {
+                grid-column: 1;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .brand__title {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <div class="header__left">
+                <img class="logo-img" src="https://cdn.discordapp.com/icons/1452832782442168355/5b7cbafcd72d351c20a3875b0ae31a9b.png?size=4096" alt="Logo" draggable="false" />
+                <div class="brand">
+                    <h1 class="brand__title">Brainrot Calculator</h1>
+                    <p class="brand__sub">Designed by Therma Lux Inspired by Fluff and Pasya</p>
+                </div>
+            </div>
+
+            <div class="header__right">
+                <button id="btnReset" class="btn btn--secondary" type="button">Reset</button>
+                <button id="btnCalc" class="btn btn--primary" type="button">Calculate</button>
+                <button id="btnCopy" class="btn btn--ghost" type="button">Copy</button>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section class="card card--inputs">
+                <div class="card__head">
+                    <h2 class="card__title">Inputs</h2>
+                    <div class="badge" id="statusBadge">Ready</div>
+                </div>
+
+                <div class="field">
+                    <label for="brainrot" class="label">Brainrot</label>
+                    <div class="combo">
+                        <input
+                            id="brainrot"
+                            class="input combo__input"
+                            type="text"
+                            placeholder="Search brainrot…"
+                            autocomplete="off"
+                        />
+                        <button id="btnClearBrainrot" class="iconbtn" type="button">×</button>
+                        <div id="suggestions" class="listbox"></div>
+                    </div>
+                    <div id="error" class="msg msg--error"></div>
+                </div>
+
+                <div class="statsRow">
+                    <div class="statMini">
+                        <div class="statMini__label">Base Stat</div>
+                        <div class="statMini__value" id="baseStat">—</div>
+                        <div class="statMini__sub">$ / Fish</div>
+                    </div>
+                    <div class="statMini">
+                        <div class="statMini__label">Mutation Total</div>
+                        <div class="statMini__value" id="mutationTotal">0%</div>
+                        <div class="statMini__sub">stacked</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="grid2">
+                    <div class="field">
+                        <div class="label-row">
+                            <label class="label">Rank</label>
+                            <span class="help">+15% per rank</span>
+                        </div>
+                        <div class="radio-input" id="rankRadio">
+                            <label>
+                                <input value="0" name="rank-radio" type="radio" checked>
+                                <span>0</span>
+                            </label>
+                            <label>
+                                <input value="1" name="rank-radio" type="radio">
+                                <span>1</span>
+                            </label>
+                            <label>
+                                <input value="2" name="rank-radio" type="radio">
+                                <span>2</span>
+                            </label>
+                            <label>
+                                <input value="3" name="rank-radio" type="radio">
+                                <span>3</span>
+                            </label>
+                            <label>
+                                <input value="4" name="rank-radio" type="radio">
+                                <span>4</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="level">Level</label>
+                        <div class="stepper">
+                            <button id="levelDown" class="stepper__btn" type="button">−</button>
+                            <input id="level" class="input stepper__input" type="number" min="1" value="1" />
+                            <button id="levelUp" class="stepper__btn" type="button">+</button>
+                        </div>
+                        <div class="field__meta"><span class="help">+50% per level after 1</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card card--mutations">
+                <div class="card__head">
+                    <h2 class="card__title">Mutations</h2>
+                </div>
+                <p class="card__hint">Tap to toggle. Percentages stack (sum → multiplier).</p>
+                <div class="divider"></div>
+                <div id="mutationsList" class="chips"></div>
+            </section>
+
+            <aside class="card card--result">
+                <div class="resultHero">
+                    <div class="resultHero__label">Final Stat</div>
+                    <div class="resultHero__value" id="finalStat">—</div>
+                    <div class="resultHero__sub">$/Fish</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="breakdown">
+                    <div class="row">
+                        <div class="row__k">Rank multiplier</div>
+                        <div class="row__v" id="rankMul">—</div>
+                    </div>
+                    <div class="row">
+                        <div class="row__k">Level multiplier</div>
+                        <div class="row__v" id="levelMul">—</div>
+                    </div>
+                    <div class="row">
+                        <div class="row__k">Mutation multiplier</div>
+                        <div class="row__v" id="mutationMul">—</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="row row--big">
+                        <div class="row__k">Final Calculation</div>
+                        <div class="row__v" id="formula">—</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script>
+        // All brainrot data from the game
+        const brainrotData = {
+            "Tung Tung Sahur": { FishValue: 100, Rarity: "Common" },
+            "Capuchino Assasino": { FishValue: 150, Rarity: "Common" },
+            "Pipi Potato": { FishValue: 300, Rarity: "Uncommon" },
+            "Capuchina Ballerina": { FishValue: 450, Rarity: "Uncommon" },
+            "Salamino Penguino": { FishValue: 750, Rarity: "Rare" },
+            "Fluriflura": { FishValue: 937, Rarity: "Rare" },
+            "Tim Cheese": { FishValue: 1125, Rarity: "Rare" },
+            "Orangutini Ananasini": { FishValue: 1875, Rarity: "Epic" },
+            "Brr Brr Patapim": { FishValue: 3000, Rarity: "Epic" },
+            "Udin Din Din Din Dun": { FishValue: 4500, Rarity: "Epic" },
+            "Pipi Kiwi": { FishValue: 5250, Rarity: "Epic" },
+            "Nooo My Hotspot": { FishValue: 3500, Rarity: "Epic" },
+            "Chef Crabracadabra": { FishValue: 9000, Rarity: "Legendary" },
+            "Boneca Ambalabu": { FishValue: 12000, Rarity: "Legendary" },
+            "Cacto Hipopotamo": { FishValue: 13500, Rarity: "Legendary" },
+            "Sigma Boy": { FishValue: 18000, Rarity: "Legendary" },
+            "Capi Taco": { FishValue: 15000, Rarity: "Legendary" },
+            "Tukanno Bananno": { FishValue: 32000, Rarity: "Legendary" },
+            "Gorillo Watermelondrillo": { FishValue: 37500, Rarity: "Mythic" },
+            "Tric Trac Barabum": { FishValue: 52500, Rarity: "Mythic" },
+            "Avocadini Guffo": { FishValue: 63750, Rarity: "Mythic" },
+            "Quivioli Ameleonni": { FishValue: 100000, Rarity: "Mythic" },
+            "Tacorita Tacorito": { FishValue: 100000, Rarity: "Mythic" },
+            "Friggo Camelo": { FishValue: 150000, Rarity: "Mythic" },
+            "Glorbo Fruttodrillo": { FishValue: 187500, Rarity: "Mythic" },
+            "Pakrahmatmamat": { FishValue: 225000, Rarity: "Mythic" },
+            "Karkerkar Kurkur": { FishValue: 350000, Rarity: "Mythic" },
+            "Candy Caney": { FishValue: 100000, Rarity: "XMAS 25" },
+            "Santa Hotspot": { FishValue: 100000, Rarity: "XMAS 25" },
+            "Elf Elf Sahur": { FishValue: 40000, Rarity: "XMAS 25" },
+            "Ginger Sekolah": { FishValue: 1000000, Rarity: "XMAS 25" },
+            "Ginger 67": { FishValue: 10000, Rarity: "XMAS 25" },
+            "La Vacca Saturnita": { FishValue: 1000000, Rarity: "Secret" },
+            "Tic Tac Sahur": { FishValue: 1750000, Rarity: "Secret" },
+            "Pot Hotspot": { FishValue: 2250000, Rarity: "Secret" },
+            "Cocofanto Elefanto": { FishValue: 2375000, Rarity: "Secret" },
+            "Job Job Sahur": { FishValue: 2500000, Rarity: "Secret" },
+            "La Cucaracha": { FishValue: 2750000, Rarity: "Secret" },
+            "La Grande Combination": { FishValue: 3000000, Rarity: "Secret" },
+            "Cuadramat & Pak": { FishValue: 3750000, Rarity: "Secret" },
+            "Dul Dul Dul": { FishValue: 4500000, Rarity: "Secret" },
+            "Cavallo Virtuoso": { FishValue: 5000000, Rarity: "Secret" },
+            "Nuclearo Dinossauro": { FishValue: 5000000, Rarity: "Exotic" },
+            "67": { FishValue: 5500000, Rarity: "Exotic" },
+            "Cupcake Koala": { FishValue: 6000000, Rarity: "Exotic" },
+            "Esok Sekolah": { FishValue: 6500000, Rarity: "Exotic" },
+            "Girafa Celestre": { FishValue: 8000000, Rarity: "Exotic" },
+            "Chillin Chilli": { FishValue: 10000000, Rarity: "Exotic" },
+            "Swag Soda": { FishValue: 12500000, Rarity: "Exotic" },
+            "Matteo": { FishValue: 15000000, Rarity: "Exotic" },
+            "Strawberelli Flamingelli": { FishValue: 15500000, Rarity: "Exotic" },
+            "Ketupat Kepat": { FishValue: 16000000, Rarity: "Exotic" },
+            "Torrtuginni Dragonfrutini": { FishValue: 18000000, Rarity: "Exotic" },
+            "Skull Skull Skull": { FishValue: 18000000, Rarity: "Exotic" },
+            "Cocosini Mama": { FishValue: 20000000, Rarity: "Exotic" },
+            "Mangolini Parrocini": { FishValue: 20000000, Rarity: "Exotic" },
+            "Pipi Corni": { FishValue: 25000000, Rarity: "Exotic" },
+            "Ganganzelli Trulala": { FishValue: 22500000, Rarity: "OG" },
+            "Strawberry Elephant": { FishValue: 50000000, Rarity: "OG" },
+            "Crystalini Ananassini": { FishValue: 55000000, Rarity: "OG" },
+            "Meowl": { FishValue: 65000000, Rarity: "OG" },
+            "Spiuniru Golubiru": { FishValue: 70000000, Rarity: "OG" },
+            "Tigroligre Frutonni": { FishValue: 80000000, Rarity: "OG" },
+            "Tralalelodon": { FishValue: 55000000, Rarity: "Event" },
+            "Orcadon": { FishValue: 58500000, Rarity: "Event" },
+            "Blingo Tentacolo": { FishValue: 62500000, Rarity: "Event" },
+            "Eviledon": { FishValue: 65000000, Rarity: "Event" },
+            "Moby Bobby": { FishValue: 75000000, Rarity: "Event" },
+            "Dragon Cannelloni": { FishValue: 75000000, Rarity: "Divine" },
+            "Alessio": { FishValue: 80000000, Rarity: "Divine" },
+            "Bombini Gusini": { FishValue: 85000000, Rarity: "Divine" },
+            "Mariachi Skeletoni": { FishValue: 87500000, Rarity: "Divine" },
+            "Chicleteira Bicicleteira": { FishValue: 90000000, Rarity: "Divine" },
+            "Piccione Maccina": { FishValue: 92500000, Rarity: "Divine" },
+            "Crabbo Limonetta": { FishValue: 95000000, Rarity: "Divine" },
+            "Bandito Axolito": { FishValue: 110000000, Rarity: "Divine" },
+            "Stoppo Luminino": { FishValue: 120000000, Rarity: "Divine" },
+            "Money Money Man": { FishValue: 125000000, Rarity: "GOD" },
+            "Signore Carapace": { FishValue: 175000000, Rarity: "GOD" },
+            "Karloo": { FishValue: 225000000, Rarity: "GOD" },
+            "Mastodontico Telepiedone": { FishValue: 325000000, Rarity: "GOD" },
+            "Pirulitoita Bicicleteira": { FishValue: 420000000, Rarity: "GOD" },
+            "Presento Camelo": { FishValue: 15000, Rarity: "Limited" },
+            "Festive 67": { FishValue: 25000, Rarity: "Limited" },
+            "La Vacca Presento": { FishValue: 50000, Rarity: "Limited" },
+            "Cooki": { FishValue: 225000, Rarity: "Limited" },
+            "25": { FishValue: 350000, Rarity: "Limited" },
+            "Santteo": { FishValue: 350000, Rarity: "Limited" },
+            "2026": { FishValue: 450000, Rarity: "Limited" },
+            "Buff Tung Tung Sahur": { FishValue: 5250, Rarity: "Exclusive" },
+            "Buff Tim Cheese": { FishValue: 7500, Rarity: "Exclusive" },
+            "Buff Fluriflura": { FishValue: 9500, Rarity: "Exclusive" },
+            "Buff Orangutini Ananasini": { FishValue: 1500, Rarity: "Exclusive" },
+            "Buff Gorillo Watermelondrillo": { FishValue: 30000, Rarity: "Exclusive" },
+            "Joe Pork": { FishValue: 25000, Rarity: "Admin" },
+            "Smurf Cat": { FishValue: 75000, Rarity: "Admin" },
+            "Skibo Boi": { FishValue: 250000, Rarity: "Admin" },
+            "Tuesday Hand": { FishValue: 350000, Rarity: "Admin" }
+        };
+
+        // Mutations data
+        const mutations = [
+            { name: "Snowy", multiplier: 0.5, display: "+50%" },
+            { name: "Gold", multiplier: 1.5, display: "+50%" },
+            { name: "Sakura", multiplier: 0.6, display: "+60%" },
+            { name: "Tornado", multiplier: 0.7, display: "+70%" },
+            { name: "Stinky", multiplier: 0.8, display: "+80%" },
+            { name: "Lightning", multiplier: 0.9, display: "+90%" },
+            { name: "Taco", multiplier: 1.0, display: "+100%" },
+            { name: "Meteor", multiplier: 1.0, display: "+100%" },
+            { name: "Blackhole", multiplier: 1.0, display: "+100%" },
+            { name: "Radioactive", multiplier: 1.1, display: "+110%" },
+            { name: "Galaxy", multiplier: 1.2, display: "+120%" },
+            { name: "Magmatic", multiplier: 1.4, display: "+140%" },
+            { name: "Diamond", multiplier: 2.0, display: "+200%" },
+            { name: "Fishing Master", multiplier: 2.0, display: "+200%" },
+            { name: "Disco", multiplier: 2.0, display: "+200%" }
+        ];
+
+        // State
+        let selectedBrainrot = null;
+        let selectedMutations = [];
+        let currentRank = 0;
+        let currentLevel = 1;
+
+        // DOM Elements
+        const brainrotInput = document.getElementById('brainrot');
+        const suggestionsBox = document.getElementById('suggestions');
+        const btnClearBrainrot = document.getElementById('btnClearBrainrot');
+        const statusBadge = document.getElementById('statusBadge');
+        const errorMsg = document.getElementById('error');
+        const baseStat = document.getElementById('baseStat');
+        const mutationTotal = document.getElementById('mutationTotal');
+        const mutationsList = document.getElementById('mutationsList');
+        const levelInput = document.getElementById('level');
+        const levelDown = document.getElementById('levelDown');
+        const levelUp = document.getElementById('levelUp');
+        const rankRadios = document.querySelectorAll('input[name="rank-radio"]');
+        const finalStat = document.getElementById('finalStat');
+        const rankMul = document.getElementById('rankMul');
+        const levelMul = document.getElementById('levelMul');
+        const mutationMul = document.getElementById('mutationMul');
+        const formula = document.getElementById('formula');
+        const btnCalc = document.getElementById('btnCalc');
+        const btnReset = document.getElementById('btnReset');
+        const btnCopy = document.getElementById('btnCopy');
+
+        // Initialize mutations chips
+        mutations.forEach((mutation, index) => {
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.textContent = `${mutation.name} ${mutation.display}`;
+            chip.dataset.index = index;
+            chip.addEventListener('click', () => toggleMutation(index));
+            mutationsList.appendChild(chip);
+        });
+
+        // Brainrot search functionality
+        brainrotInput.addEventListener('input', (e) => {
+            const search = e.target.value.toLowerCase();
+            if (!search) {
+                suggestionsBox.classList.remove('show');
+                return;
+            }
+
+            const matches = Object.keys(brainrotData).filter(name => 
+                name.toLowerCase().includes(search)
+            );
+
+            if (matches.length > 0) {
+                suggestionsBox.innerHTML = matches.map(name => 
+                    `<div class="listbox__item" data-name="${name}">${name} (${brainrotData[name].Rarity})</div>`
+                ).join('');
+                suggestionsBox.classList.add('show');
+            } else {
+                suggestionsBox.classList.remove('show');
+            }
+        });
+
+        suggestionsBox.addEventListener('click', (e) => {
+            if (e.target.classList.contains('listbox__item')) {
+                const name = e.target.dataset.name;
+                selectBrainrot(name);
+            }
+        });
+
+        btnClearBrainrot.addEventListener('click', () => {
+            brainrotInput.value = '';
+            selectedBrainrot = null;
+            suggestionsBox.classList.remove('show');
+            baseStat.textContent = '—';
+            errorMsg.textContent = '';
+            statusBadge.textContent = 'Ready';
+            calculate();
+        });
+
+        function selectBrainrot(name) {
+            selectedBrainrot = name;
+            brainrotInput.value = name;
+            suggestionsBox.classList.remove('show');
+            baseStat.textContent = `$${brainrotData[name].FishValue.toLocaleString()}`;
+            errorMsg.textContent = '';
+            statusBadge.textContent = 'Selected';
+            calculate();
+        }
+
+        function toggleMutation(index) {
+            const chip = mutationsList.children[index];
+            if (selectedMutations.includes(index)) {
+                selectedMutations = selectedMutations.filter(i => i !== index);
+                chip.classList.remove('active');
+            } else {
+                selectedMutations.push(index);
+                chip.classList.add('active');
+            }
+            updateMutationTotal();
+            calculate();
+        }
+
+        function updateMutationTotal() {
+            const totalPercent = selectedMutations.reduce((sum, index) => {
+                return sum + (mutations[index].multiplier * 100);
+            }, 0);
+            mutationTotal.textContent = `${totalPercent.toFixed(0)}%`;
+        }
+
+        // Level controls
+        levelUp.addEventListener('click', () => {
+            currentLevel = parseInt(levelInput.value) + 1;
+            levelInput.value = currentLevel;
+            calculate();
+        });
+
+        levelDown.addEventListener('click', () => {
+            if (currentLevel > 1) {
+                currentLevel = parseInt(levelInput.value) - 1;
+                levelInput.value = currentLevel;
+                calculate();
+            }
+        });
+
+        levelInput.addEventListener('input', (e) => {
+            currentLevel = Math.max(1, parseInt(e.target.value) || 1);
+            levelInput.value = currentLevel;
+            calculate();
+        });
+
+        // Rank controls
+        rankRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                currentRank = parseInt(e.target.value);
+                calculate();
+            });
+        });
+
+        // Calculate function
+        function calculate() {
+            if (!selectedBrainrot) {
+                finalStat.textContent = '—';
+                rankMul.textContent = '—';
+                levelMul.textContent = '—';
+                mutationMul.textContent = '—';
+                formula.textContent = '—';
+                return;
+            }
+
+            const baseValue = brainrotData[selectedBrainrot].FishValue;
+            
+            // Rank multiplier: 1 + (rank * 0.15)
+            const rankMultiplier = 1 + (currentRank * 0.15);
+            
+            // Level multiplier: 1 + ((level - 1) * 0.5)
+            const levelMultiplier = 1 + ((currentLevel - 1) * 0.5);
+            
+            // Mutation multiplier: sum of all selected mutations
+            let mutationMultiplier = 1;
+            selectedMutations.forEach(index => {
+                mutationMultiplier += mutations[index].multiplier;
+            });
+            
+            const finalValue = baseValue * rankMultiplier * levelMultiplier * mutationMultiplier;
+            
+            finalStat.textContent = `$${finalValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            rankMul.textContent = `${rankMultiplier.toFixed(2)}x`;
+            levelMul.textContent = `${levelMultiplier.toFixed(2)}x`;
+            mutationMul.textContent = `${mutationMultiplier.toFixed(2)}x`;
+            formula.textContent = `${baseValue.toLocaleString()} × ${rankMultiplier.toFixed(2)} × ${levelMultiplier.toFixed(2)} × ${mutationMultiplier.toFixed(2)}`;
+            statusBadge.textContent = 'Calculated';
+        }
+
+        // Button handlers
+        btnCalc.addEventListener('click', calculate);
+
+        btnReset.addEventListener('click', () => {
+            brainrotInput.value = '';
+            selectedBrainrot = null;
+            selectedMutations = [];
+            currentRank = 0;
+            currentLevel = 1;
+            levelInput.value = 1;
+            rankRadios[0].checked = true;
+            
+            document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+            
+            baseStat.textContent = '—';
+            mutationTotal.textContent = '0%';
+            finalStat.textContent = '—';
+            rankMul.textContent = '—';
+            levelMul.textContent = '—';
+            mutationMul.textContent = '—';
+            formula.textContent = '—';
+            statusBadge.textContent = 'Ready';
+            errorMsg.textContent = '';
+        });
+
+        btnCopy.addEventListener('click', () => {
+            if (finalStat.textContent !== '—') {
+                navigator.clipboard.writeText(finalStat.textContent);
+                statusBadge.textContent = 'Copied!';
+                setTimeout(() => statusBadge.textContent = 'Calculated', 2000);
+            }
+        });
+
+        // Close suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!brainrotInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                suggestionsBox.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
